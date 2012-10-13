@@ -1,4 +1,4 @@
-This is PYRAMOS, a dungeon crawling puzzle game
+This is PYRAMOS, a dungeon crawling puzzle game. Help King Tut reach the end!
 
 The game is developed using PYGAME (http://www.pygame.org/news.html)
 
@@ -11,11 +11,12 @@ HOW TO PLAY:
 
 DUNGEON TILES:
 
-- # -> this represents a wall or a covered tile
-- an empty tile represents a valid path
-- @ -> this is you!
-- S -> start
-- E -> end
+Togheter with the Player tile, there are 4 other tile types:
+
+- wall : don't hit one, or you'll die
+- floor : there you go...
+- start point : a floor tile marked with a green S
+- end point : guess what?
 
 AUTHOR:
 
