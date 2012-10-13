@@ -1,7 +1,6 @@
 # size of the viewport (10 x 10 tiles)
 # C:\Python\27\python.exe .\main.py
 # cd .\Documents\GitHub\pyramos-game
-
 WINDOW_SIZE = (960, 960)
 
 # size of each square (32 x 32 pixels)

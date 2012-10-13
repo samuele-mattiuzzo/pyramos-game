@@ -16,8 +16,9 @@ def show_exception_and_exit(exc_type, exc_value, tb):
 sys.excepthook = show_exception_and_exit
 
 # utility variables 
-PLAYER_MOVES = 0
+
 UNCOVERED = {
+	#            x  y
 	"top" : 	(7, 0) ,
 	"right" : 	(8, 1) ,
 	"bottom" : 	(9, 0),
@@ -37,7 +38,7 @@ END_SPRITE = pygame.image.load(e_spr).convert()
 
 # draws single square (pox * 32 px on screen)
 def drawSquare(scr, pos, stype):
-	pos = (pos[0]*TILE_HEIGHT, pos[1]*TILE_WIDTH)
+	pos = (pos[1]*TILE_HEIGHT, pos[0]*TILE_WIDTH)
 
 	if stype == 0: # wall
 		scr.blit(WALL_SPRITE, pos)
@@ -54,35 +55,33 @@ def drawSquare(scr, pos, stype):
 	elif stype == 5: # player
 		scr.blit(PLAYER_SPRITE, pos)
 
-
 # global
 def firstDraw(player, level, scr):
 
 	# draws all squares covered + player
-	for i in range(LEVEL_HEIGHT):
-		for j in range(LEVEL_WIDTH):
-			#print "Comparing " + str((i,j)) + " with " + str(player.pos) + str((i,j) == player.pos)
+	for i in range(LEVEL_HEIGHT): # row
+		for j in range(LEVEL_WIDTH): # column
 			if (i,j) != player.pos:
 				drawSquare(scr, (i,j), stype=0) # draw covered square
 			
 			else:
-				drawSquare(scr, player.pos, stype=5) # draw player on start position
+				drawSquare(scr, (i,j), stype=5) # draw player on start position
 
 	# uncovers seen squares (around player)
 	updateUncovered(player.pos, level.design, scr) # uncovers squares around player
 
 # graphical: resets back to WALL_SPRITE
-def resetUncovered(scr):
-	if UNCOVERED["top"][0] > -1:
+def resetUncovered(scr, pos):
+	if UNCOVERED["top"][0] > -1 and not UNCOVERED["top"] == pos:
 		drawSquare(scr, UNCOVERED["top"], stype=0)
 
-	if UNCOVERED["right"][1] < 10:
+	if UNCOVERED["right"][1] < 10 and not UNCOVERED["right"] == pos:
 		drawSquare(scr, UNCOVERED["right"], stype=0)
 
-	if UNCOVERED["bottom"][0] < 10:
+	if UNCOVERED["bottom"][0] < 10 and not UNCOVERED["bottom"] == pos:
 		drawSquare(scr, UNCOVERED["bottom"], stype=0)
 
-	if UNCOVERED["left"][1] > -1:
+	if UNCOVERED["left"][1] > -1 and not UNCOVERED["left"] == pos:
 		drawSquare(scr, UNCOVERED["left"], stype=0)
 
 
@@ -116,6 +115,8 @@ def updateUncovered(player_pos, lmap, scr):
 			UNCOVERED["left"], # pos * tile size
 			stype=lmap[UNCOVERED["left"][0]][UNCOVERED["left"][1]]) # square type from map
 
+	screen.blit(scr, (0, 0))
+	pygame.display.flip()
 
 # loads up a new level: tiles and render
 def loadLevel(lid):
@@ -131,9 +132,7 @@ def checkEndLevel(player_pos, end):
 
 # actually moves the player tile
 def movePlayer(player, pos, scr):
-	drawSquare(scr, player.pos, stype=0) # resets the last square visited to wall (then updates)
 	drawSquare(scr, pos, stype=5) # moves the player
-	
 
 # checks for the new player move and returns the new position. false if it's not (player dies!)
 def newValidPos(player_pos, keyName, lmap):
@@ -162,7 +161,7 @@ def newValidPos(player_pos, keyName, lmap):
 		else:
 			is_dead = True
 
-	if keyName == "DOWN" and player_pos[1]>0:
+	if keyName == "DOWN" and player_pos[0]<9:
 		if lmap[player_pos[0]+1][player_pos[1]] != 0:
 			pos = (pos[0]+1, pos[1])
 			valid = True
@@ -175,6 +174,7 @@ def newValidPos(player_pos, keyName, lmap):
 
 def main():
 
+	PLAYER_MOVES = 0
 	# pygame.init
 	game_area = pygame.Surface(screen.get_size())
 
@@ -205,7 +205,7 @@ def main():
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				print "Bye!"
-				return
+				sys.exit()
 
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_UP:
@@ -220,7 +220,39 @@ def main():
 				elif event.key == pygame.K_LEFT:
 					pressed = "LEFT"
 
-		valid, is_dead, tmp_pos = newValidPos(player.pos, pressed, level.design)
+				valid, is_dead, tmp_pos = newValidPos(player.pos, pressed, level.design)
+
+		if is_dead:
+			print "You touched a poisonous wall! You are dead!"
+			print "Your score is: " + str(PLAYER_MOVES)
+			print "Bye!"
+			sys.exit()
+
+		else:
+			if valid:
+				# actually moves the player
+				valid = False
+				movePlayer(player, tmp_pos, game_area)
+				player.updatePos(tmp_pos)
+
+				if checkEndLevel(player.pos, level.end):
+					print "YOU WON!"
+					if PLAYER_MOVES == level.completion:
+						print "CHAMPION SCORE! You made " + str(PLAYER_MOVES) + " step and you're a champion!"
+					else:
+						print "Not bad, it took you more than we expected..."
+					print "Bye!"
+					sys.exit()
+
+				PLAYER_MOVES += 1
+
+				# reset - uncover
+				resetUncovered(game_area, player.pos)
+				updateUncovered(player.pos, level.design, game_area)
+				screen.blit(game_area, (0, 0))
+				pygame.display.flip()
+
+				# check for game end
 
 		#get the current real time
 		T = pygame.time.get_ticks()
@@ -237,7 +269,6 @@ def main():
 		while(T-now >= step_size):
 			pygame.display.set_caption(level.name + "("+str(level.completion)+") | " + player.name + "("+str(PLAYER_MOVES)+")") 
 			#save old game state, update new game state based on step_size
-			print pressed
 			now += step_size
 		else:
 			pygame.time.wait(10)
