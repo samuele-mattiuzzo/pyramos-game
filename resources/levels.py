@@ -32,10 +32,36 @@ LEVELS = [
 	"start" : (8, 0),
 	"end" : (0, 9),
 
-	"background_music" : "C:\Users\Smau\My Documents\GitHub\pyramos-game\\resources\\audio\0.mp3",
+	"background_music" : "",
 	"top_score" : 18, 
 
 },
 
+{	
+
+	"id" : 1,
+
+	"name" : "Temple of Doom",
+	
+	"design" : [
+				[0,0,0,0,0,0,1,1,1,3],
+				[0,1,1,0,1,0,0,1,0,0],
+				[1,1,0,1,0,0,0,1,0,0],
+				[1,0,0,1,0,1,1,1,0,0],
+				[0,0,1,1,1,1,0,1,1,1],
+				[0,1,1,0,0,0,1,0,1,0],
+				[1,1,1,0,1,0,1,0,1,1],
+				[1,0,1,1,1,1,1,0,1,0],
+				[0,0,0,0,1,0,0,0,0,0],
+				[2,1,1,3,0,0,0,0,0,0]
+				],
+
+	"start" : (9, 0),
+	"end" : (9, 3),
+
+	"background_music" : "",
+	"top_score" : 18, 
+
+},
 
 ]

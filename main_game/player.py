@@ -4,12 +4,15 @@ from resources.config import *
 
 class Player:
 
-	def __init__(self, start_pos):
+	def __init__(self):
 		self.name = 'King Tut'
-		self.pos = start_pos
+		self.pos = (0,0)
 		self.moves = 0
 		self.deaths = 0
 		self.best = {}
+
+	def newStart(self, pos):
+		self.pos = pos
 
 	def updatePos(self, np):
 		self.pos = np

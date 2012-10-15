@@ -20,13 +20,6 @@ except ImportError, err:
 	sys.exit(2)
 
 ## GLOBAL VARIABLES
-UNCOVERED = {
-	#"dir":     x,y
-	"top" : 	(),
-	"right" : 	(),
-	"bottom" : 	(),
-	"left" : 	(),
-}
 
 # pygame init and screen global variable
 pygame.init()
@@ -38,19 +31,35 @@ screen = game_sys.get_screen()
 WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE = game_sys.load_images()
 TILE_SIZE = TILE_WIDTH, TILE_HEIGHT = game_sys.get_images_properties()
 
+# level preconfiguration
+LEVEL_ID = 0 # beginning of the game
+LEVEL = Level(LEVEL_ID)
+PLAYER = Player()
+PLAYER.newStart(LEVEL.start)
+GAME_AREA = pygame.Surface(screen.get_size())
+UNCOVERED = {
+	#"dir":     x,y
+	"top" : 	(),
+	"right" : 	(),
+	"bottom" : 	(),
+	"left" : 	(),
+}
+
 # gui elements preloading (NotYetImplemented)
 # LEVEL_NAME, LEVEL_TOP_SCORE, LEVEL ID+1, GAME_MODE, PLAYER_MOVES, PLAYER_DEATHS, PLAYER_TOP
 
-# gui creation
+# graphics creation
 g = Graphics(TILE_HEIGHT, TILE_WIDTH, WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE)
 
-# loads up a new level: tiles and render
-def loadLevel(lid):
-	return Level(lid)
+def nextLevel():
+	global LEVEL, PLAYER, GAME_AREA
+	if not LEVEL_ID == LEVEL.id:	
+		LEVEL = Level(LEVEL_ID)
+		PLAYER.newStart(LEVEL.start)
 
-# tbd
-def newGame():
-	pygame.display.set_caption('Pyramos - a game written in python and pygame (Samuele Mattiuzzo - samumatt@gmail.com)') 
+	g.display_game(screen, GAME_AREA, LEVEL, PLAYER, UNCOVERED)
+	screen.blit(GAME_AREA, (0, 0))
+	pygame.display.flip()
 
 # checks the end square
 def checkEndLevel(player_pos, end):
@@ -95,12 +104,6 @@ def newValidPos(player_pos, keyName, lmap):
 
 
 def main():
-
-	# pygame.init, level loading and player creation
-	game_area = pygame.Surface(screen.get_size())
-	level = loadLevel(0)
-	player = Player(level.start)
-
 	#time is specified in milliseconds
 	#fixed simulation step duration
 	step_size = 500
@@ -109,16 +112,14 @@ def main():
 	now = pygame.time.get_ticks()
 
 	# first draw
-	g.display_game(screen, game_area, level, player, UNCOVERED)
+	nextLevel()
 
-	screen.blit(game_area, (0, 0))
-	pygame.display.flip()
-
+	__cycle = True
 	valid = is_dead = False
-	tmp_pos = player.pos
+	tmp_pos = PLAYER.pos
 	pressed = ""
 
-	while(True):
+	while(__cycle):
 		#handle events
 
 		for event in pygame.event.get():
@@ -129,24 +130,21 @@ def main():
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					sys.exit()
+				else:
+					if event.key == pygame.K_UP:
+						pressed =  "UP"  
+					elif event.key == pygame.K_DOWN: 
+						pressed =  "DOWN" 
+					elif event.key == pygame.K_RIGHT:
+						pressed =  "RIGHT" 
+					elif event.key == pygame.K_LEFT:
+						pressed =  "LEFT" 
 
-				elif event.key == pygame.K_UP:
-					pressed = "UP"
-
-				elif event.key == pygame.K_DOWN:
-					pressed = "DOWN"
-
-				elif event.key == pygame.K_RIGHT:
-					pressed = "RIGHT"
-
-				elif event.key == pygame.K_LEFT:
-					pressed = "LEFT"
-
-				valid, is_dead, tmp_pos = newValidPos(player.pos, pressed, level.design)
+				valid, is_dead, tmp_pos = newValidPos(PLAYER.pos, pressed, LEVEL.design)
 
 		if is_dead:
 			print "You touched a poisonous wall! You are dead!"
-			print "Your score is: " + str(player.moves)
+			print "Your score is: " + str(PLAYER.moves)
 			print "Bye!"
 			sys.exit()
 
@@ -154,21 +152,20 @@ def main():
 			if valid:
 				# actually moves the player
 				valid = False
-				g.update_game(screen, game_area, player, level, tmp_pos, UNCOVERED)
-				
-				if checkEndLevel(player.pos, level.end):
-					print "YOU WON!"
-					if player.moves <= level.completion:
-						print "CHAMPION SCORE! You made " + str(player.moves) + " step and you're a champion!"
-					else:
-						print "Not bad, it took you more than we expected..."
-					print "Bye!"
-					sys.exit()
-
+				g.update_game(screen, GAME_AREA, PLAYER, LEVEL, tmp_pos, UNCOVERED)
 				# reset - uncover
-				screen.blit(game_area, (0, 0))
-				pygame.display.flip()	
-				
+				screen.blit(GAME_AREA, (0, 0))
+				pygame.display.flip()
+
+				if checkEndLevel(PLAYER.pos, LEVEL.end):
+					global LEVEL_ID
+					LEVEL_ID += 1
+					if LEVEL_ID < len(LEVELS):
+						nextLevel() # continue
+					else:
+						print "YOU WON!"
+						print "You completed " + str(LEVEL_ID) + " stages with a total of " + str(PLAYER.moves) + " steps"
+						__cycle = False
 
 		#get the current real time
 		T = pygame.time.get_ticks()
@@ -183,7 +180,6 @@ def main():
 		#this code will run only when enough time has passed, and will
 		#catch up to wall time if needed.
 		while(T-now >= step_size):
-			pygame.display.set_caption(level.name + "("+str(level.completion)+") | " + player.name + "("+str(player.moves)+")") 
 			#save old game state, update new game state based on step_size
 			now += step_size
 		else:
