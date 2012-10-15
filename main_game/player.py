@@ -21,14 +21,15 @@ class Player:
 	def addMove(self):
 		self.moves += 1
 
-	def resetMoves(self):
-		self.moves = 0
-
 	def addDeath(self):
 		self.deaths += 1
 
-	def resetDeaths(self):
-		self.deaths = 0
+	def updateBestScore(self, id, name, new_score):
+		if self.best.has_key(id):
+			if new_score < self.best[id]:
+				self.best[id][1] = new_score
+		else:
+			self.best[id] = (name, new_score)
 
-	def updateBestScore(self, id, new_score):
-		self.best[id] = new_score
+	def getBestScores(self):
+		return self.best

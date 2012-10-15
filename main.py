@@ -159,12 +159,17 @@ def main():
 
 				if checkEndLevel(PLAYER.pos, LEVEL.end):
 					global LEVEL_ID
+					PLAYER.updateBestScore(LEVEL_ID, LEVELS[LEVEL_ID]["name"], PLAYER.moves)
 					LEVEL_ID += 1
 					if LEVEL_ID < len(LEVELS):
 						nextLevel() # continue
 					else:
 						print "YOU WON!"
 						print "You completed " + str(LEVEL_ID) + " stages with a total of " + str(PLAYER.moves) + " steps"
+						print "\nScores:"
+						scores = PLAYER.getBestScores()
+						for i in scores:
+							print "%s: %s - %s steps" % (str(i), str(scores[i][0], str(scores[i][1])))
 						__cycle = False
 
 		#get the current real time
