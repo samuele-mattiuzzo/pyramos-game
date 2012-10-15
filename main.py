@@ -103,13 +103,13 @@ def main():
 
 	#time is specified in milliseconds
 	#fixed simulation step duration
-	step_size = 1000
+	step_size = 500
 	#max duration to render a frame
 	max_frame_time = 100
 	now = pygame.time.get_ticks()
 
 	# first draw
-	g.display_game(game_area, level, player, UNCOVERED)
+	g.display_game(screen, game_area, level, player, UNCOVERED)
 
 	screen.blit(game_area, (0, 0))
 	pygame.display.flip()
@@ -154,9 +154,8 @@ def main():
 			if valid:
 				# actually moves the player
 				valid = False
-				g.update_game(game_area, player, level, UNCOVERED)
-				player.updatePos(tmp_pos)
-
+				g.update_game(screen, game_area, player, level, tmp_pos, UNCOVERED)
+				
 				if checkEndLevel(player.pos, level.end):
 					print "YOU WON!"
 					if player.moves <= level.completion:
@@ -167,9 +166,9 @@ def main():
 					sys.exit()
 
 				# reset - uncover
-				
 				screen.blit(game_area, (0, 0))
-				pygame.display.flip()
+				pygame.display.flip()	
+				
 
 		#get the current real time
 		T = pygame.time.get_ticks()

@@ -1,7 +1,7 @@
 try:
 	import pygame
 	from pygame.locals import *
-	import pgu
+	#import pgu
 except ImportError, err:
 	print "couldn't load module. %s" % (err)
 	sys.exit(2)
@@ -13,8 +13,8 @@ class Graphics:
 		- [X] draw level
 		- [X] update level
 		- [ ] level info
-		- [ ] player moves
-		- [ ] player deathcounts
+		- [X] player moves
+		- [X] player deathcounts
 		- [ ] scores and online charts
 	'''
 
@@ -48,33 +48,34 @@ class Graphics:
 		elif stype == 5: # player
 			scr.blit(self.PLAYER_SPRITE, pos)
 
-	def display_game(self, screen, level, player, uncv):
+	def display_game(self, screen, game_area, level, player, uncv):
 		'''
 			Draws the level for the first time
 		'''
 		for i in range(10): # row
 			for j in range(10): # column
 				if (i,j) != player.pos:
-					self.drawSquare(screen, (i,j), stype=0) # draw covered square
+					self.drawSquare(game_area, (i,j), stype=0) # draw covered square
 			
 				else:
-					self.drawSquare(screen, (i,j), stype=5) # draw player on start position
+					self.drawSquare(game_area, (i,j), stype=5) # draw player on start position
 
 		# uncovers seen squares (around player)
-		self.update_uncovered(screen, level, player, uncv) # uncovers squares around player
+		self.update_uncovered(screen, game_area, level, player, uncv) # uncovers squares around player
 
 	def display_gui(self, screen):
 		pass
 
-	def update_game(self, screen, player, level, uncv):
+	def update_game(self, screen, game_area, player, level, new_pos, uncv):
 		'''
 			Reset uncovered -> update uncovered
 		'''
-		self.reset_uncovered(screen, player, uncv)
-		self.update_player(screen, player.pos)
-		self.update_uncovered(screen, level, player, uncv)
-		#screen.blit(screen, (0, 0))
-		#pygame.display.flip()
+		self.reset_uncovered(screen, game_area, player, uncv)
+		self.update_player(screen, game_area, new_pos)
+		player.updatePos(new_pos)
+		self.update_uncovered(screen, game_area, level, player, uncv)
+		screen.blit(screen, (0, 0))
+		pygame.display.flip()
 
 	def update_gui(self, screen):
 		'''
@@ -82,15 +83,14 @@ class Graphics:
 		'''
 		pass
 
-	def update_player(self, screen, pos):
+	def update_player(self, screen, game_area, pos):
 		'''
 			Moves the player square
 		'''
-		self.drawSquare(screen, pos, stype=5) # moves the player
-		#screen.blit(screen, (0, 0))
-		#pygame.display.flip()
+		self.drawSquare(game_area, pos, stype=5) # moves the player
+		screen.blit(game_area, (0, 0))
 	
-	def update_uncovered(self, screen, level, player, UNCOVERED):
+	def update_uncovered(self, screen, game_area, level, player, UNCOVERED):
 		'''
 			Uncovers squares around the player
 		'''
@@ -100,51 +100,49 @@ class Graphics:
 		# control top
 		UNCOVERED["top"] = (player_pos[0]-1, player_pos[1])
 		if UNCOVERED["top"][0] > -1:
-			self.drawSquare(screen, 
+			self.drawSquare(game_area, 
 				UNCOVERED["top"], # pos * tile size
 				stype=lmap[UNCOVERED["top"][0]][UNCOVERED["top"][1]]) # square type from map
 
 		# control right
 		UNCOVERED["right"] = (player_pos[0], player_pos[1]+1)
 		if UNCOVERED["right"][1] < 10:
-			self.drawSquare(screen, 
+			self.drawSquare(game_area, 
 				UNCOVERED["right"], # pos * tile size
 				stype=lmap[UNCOVERED["right"][0]][UNCOVERED["right"][1]]) # square type from map
 
 		# control bottom
 		UNCOVERED["bottom"] = (player_pos[0]+1, player_pos[1])
 		if UNCOVERED["bottom"][0] < 10:
-			self.drawSquare(screen, 
+			self.drawSquare(game_area, 
 				UNCOVERED["bottom"], # pos * tile size
 				stype=lmap[UNCOVERED["bottom"][0]][UNCOVERED["bottom"][1]]) # square type from map
 
 		# control left
 		UNCOVERED["left"] = (player_pos[0], player_pos[1]-1)
 		if UNCOVERED["left"][0] > -1:
-			self.drawSquare(screen, 
+			self.drawSquare(game_area, 
 				UNCOVERED["left"], # pos * tile size
 				stype=lmap[UNCOVERED["left"][0]][UNCOVERED["left"][1]]) # square type from map
 
-		#screen.blit(screen, (0, 0))
-		#pygame.display.flip()
+		screen.blit(game_area, (0, 0))
 
-	def reset_uncovered(self, screen, player, UNCOVERED):
+	def reset_uncovered(self, screen, game_area, player, UNCOVERED):
 		'''
 			Resets lastly seen squares
 		'''
 
 		pos = player.pos
 		if UNCOVERED["top"][0] > -1 and not UNCOVERED["top"] == pos:
-			self.drawSquare(screen, UNCOVERED["top"], stype=0)
+			self.drawSquare(game_area, UNCOVERED["top"], stype=0)
 
 		if UNCOVERED["right"][1] < 10 and not UNCOVERED["right"] == pos:
-			self.drawSquare(screen, UNCOVERED["right"], stype=0)
+			self.drawSquare(game_area, UNCOVERED["right"], stype=0)
 
 		if UNCOVERED["bottom"][0] < 10 and not UNCOVERED["bottom"] == pos:
-			self.drawSquare(screen, UNCOVERED["bottom"], stype=0)
+			self.drawSquare(game_area, UNCOVERED["bottom"], stype=0)
 
 		if UNCOVERED["left"][1] > -1 and not UNCOVERED["left"] == pos:
-			self.drawSquare(screen, UNCOVERED["left"], stype=0)
+			self.drawSquare(game_area, UNCOVERED["left"], stype=0)
 
-		#screen.blit(screen, (0, 0))
-		#pygame.display.flip()
+		screen.blit(game_area, (0, 0))
