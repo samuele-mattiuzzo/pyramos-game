@@ -169,7 +169,7 @@ def main():
 						print "\nScores:"
 						scores = PLAYER.getBestScores()
 						for i in scores:
-							print "%s: %s - %s steps" % (str(i), str(scores[i][0], str(scores[i][1])))
+							print "%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1]))
 						__cycle = False
 
 		#get the current real time
