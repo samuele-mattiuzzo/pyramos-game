@@ -16,44 +16,44 @@ except ImportError as err:
 
 class Game:
 
-    def __init__(self, level_id=0, all_levels=[]):
-        self.player = None
-        self.level_id = level
-        self.level = None
-        self.levels = all_levels
-        self.settings = {}
+	def __init__(self, level_id=0, all_levels=[]):
+		self.player = None
+		self.level_id = level_id
+		self.level = None
+		self.levels = all_levels
+		self.settings = {}
 
-        self.init()
+		self.init()
 
-    def init(self):
-        self.level = Level(self.level_id)
-        self.player = Player()
-        self.player.new_start(self.level.start)
+	def init(self):
+		self.level = Level(self.level_id)
+		self.player = Player()
+		self.player.new_start(self.level.start)
 
-    def start(self):
-        pass
+	def start(self):
+		pass
 
-    def end(self):
-        pass
+	def end(self):
+		pass
 
-    def update(self):
-        pass
+	def update(self):
+		pass
 
-    def next_level(self):
-        self.level_id += 1
-        self.level = Level(self.level_id)
+	def next_level(self):
+		self.level_id += 1
+		self.level = Level(self.level_id)
 
-    def _get_settings(self):
-        pass
+	def _get_settings(self):
+		pass
 
-    def _get_level(self):
-        pass
+	def _get_level(self):
+		pass
 
-    def _get_player(self):
-        pass
+	def _get_player(self):
+		pass
 
-    def _check_end(self):
-        return self.player.pos == self.level.end
+	def _check_end(self):
+		return self.player.pos == self.level.end
 
-    def _check_has_more_levels(self):
-        return self.level_id + 1 == len(self.levels)
+	def _check_has_more_levels(self):
+		return self.level_id + 1 == len(self.levels)

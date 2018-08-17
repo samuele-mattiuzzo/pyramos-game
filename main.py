@@ -9,7 +9,7 @@ try:
 	from resources.levels import *
 
 	# main game classes imports
-    from main_game.game import *
+	from main_game.game import *
 	from main_game.level import *
 	from main_game.player import *
 	from main_game.square import *
@@ -24,40 +24,17 @@ except ImportError as err:
 
 # pygame init and screen global variable
 pygame.init()
-game_sys = System()
-game_sys.get_properties()
-screen = game_sys.get_screen()
-
-# tiles preloading
-WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE = game_sys.load_images()
-TILE_SIZE = TILE_WIDTH, TILE_HEIGHT = game_sys.get_images_properties()
 
 # level preconfiguration
 LEVEL_ID = 0 # beginning of the game
-game = Game(
-    level_id=LEVEL_ID
-    levels=LEVELS
-)
+game = Game(level_id=LEVEL_ID, all_levels=LEVELS)
+g = Graphics()
+TILE_SIZE = g.TILE_WIDTH, g.TILE_HEIGHT
 
-GAME_AREA = pygame.Surface(screen.get_size())
-
-UNCOVERED = {
-	#"dir":	 x,y
-	"top" : 	(),
-	"right" : 	(),
-	"bottom" : 	(),
-	"left" : 	(),
-}
-
-# gui elements preloading (NotYetImplemented)
-# LEVEL_NAME, LEVEL_TOP_SCORE, LEVEL ID+1, GAME_MODE, PLAYER_MOVES, PLAYER_DEATHS, PLAYER_TOP
-
-# graphics creation
-g = Graphics(TILE_HEIGHT, TILE_WIDTH, WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE)
 
 def next_level():
-	g.display_game(screen, GAME_AREA, game.level, game.player, UNCOVERED)
-	screen.blit(GAME_AREA, (0, 0))
+	g.display_game(game.level, game.player)
+	g.SCREEN.blit(g.GAME_AREA, (0, 0))
 	pygame.display.flip()
 
 
@@ -109,10 +86,14 @@ def main():
 
 	# first draw
 	game.next_level()
+	g.update_game(
+		game.player, game.level,
+		game.player.pos
+	)
 
 	__cycle = True
 	valid = is_dead = False
-	tmp_pos = PLAYER.pos
+	tmp_pos = game.player.pos
 	pressed = ""
 
 	while(__cycle):
@@ -128,10 +109,10 @@ def main():
 					sys.exit()
 				else:
 					valid, is_dead, tmp_pos = new_valid_pos(
-                        game.player.pos,
-                        event.key,
-                        game.level.design
-                    )
+						game.player.pos,
+						event.key,
+						game.level.design
+					)
 
 		if is_dead:
 			print("You touched a poisonous wall! You are dead!")
@@ -144,24 +125,21 @@ def main():
 				# actually moves the player
 				valid = False
 				g.update_game(
-                    screen, GAME_AREA,
-                    game.player, game.level,
-                    tmp_pos, UNCOVERED
-                )
+					game.player, game.level,
+					tmp_pos)
 
-                # reset - uncover
-				screen.blit(GAME_AREA, (0, 0))
+				# reset - uncover
+				g.SCREEN.blit(g.GAME_AREA, (0, 0))
 				pygame.display.flip()
 
 				if game._check_end():
-					global LEVEL_ID
 					game.player.update_best_score(
-                        game.level_id,
-                        game.level["name"],
-                        game.player.moves
-                    )
-                    if game._check_has_more_levels()
-                        game.next_level()
+						game.level_id,
+						game.level["name"],
+						game.player.moves
+					)
+					if game._check_has_more_levels():
+						game.next_level()
 					else:
 						print("YOU WON!")
 						print("You completed %s stages with a total of %s steps" % (str(game.level_id), str(game.player.moves)))
