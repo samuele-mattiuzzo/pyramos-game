@@ -29,9 +29,9 @@ class Graphics:
 		self.SCREEN = self._SYS.get_screen()
 		self.GAME_AREA = pygame.Surface(self.SCREEN.get_size())
 
-		(self.WALK_SPRITE,
+		(self.WALL_SPRITE,
 		self.PLAYER_SPRITE,
-		self.WALL_SPRITE,
+		self.WALK_SPRITE,
 		self.START_SPRITE,
 		self.END_SPRITE) = self._SYS.load_images()
 
@@ -98,7 +98,7 @@ class Graphics:
 		'''
 		pass
 
-	def update_player(self, game_area, pos):
+	def update_player(self, pos):
 		'''
 			Moves the player square
 		'''

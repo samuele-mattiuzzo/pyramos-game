@@ -6,6 +6,7 @@ except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
+
 class System:
 	'''
 		Class for handling:
@@ -27,7 +28,7 @@ class System:
 			NotYetImplemented: may be done in __init__()?
 		'''
 		video = pygame.display.Info()
-		self.res = (video.current_w//2, video.current_h//2)
+		self.res = (video.current_w//2 + 50, video.current_h//2 + 50)
 		self.surface_size = (self.res[1], self.res[1])
 		self.tile_size = self.tile_x, self.tile_y = (int(self.res[1]/10), int(self.res[1]/10))
 
@@ -35,7 +36,8 @@ class System:
 		'''
 			Creates and returns a new screen
 		'''
-		return pygame.display.set_mode(self.res)
+		return pygame.display.set_mode(
+			self.res)
 
 	def load_mode(self, mode):
 		'''

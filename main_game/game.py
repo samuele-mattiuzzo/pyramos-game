@@ -2,13 +2,9 @@ try:
 	import os
 	import pygame
 	from pygame.locals import *
-
 	from main_game.level import *
 	from main_game.player import *
-	from main_game.square import *
 	from main_game.gui import *
-	from main_game.system import *
-
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
@@ -21,14 +17,16 @@ class Game:
 		self.level_id = level_id
 		self.level = None
 		self.levels = all_levels
-		self.settings = {}
+		self.GUI = None
 
-		self.init()
+		self.on_init()
 
-	def init(self):
+	def on_init(self):
 		self.level = Level(self.level_id)
 		self.player = Player()
 		self.player.new_start(self.level.start)
+
+		self.GUI = Graphics()
 
 	def start(self):
 		pass

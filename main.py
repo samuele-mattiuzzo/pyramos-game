@@ -22,19 +22,14 @@ except ImportError as err:
 
 ## GLOBAL VARIABLES
 
-# pygame init and screen global variable
+# pygame init
 pygame.init()
-
-# level preconfiguration
-LEVEL_ID = 0 # beginning of the game
-game = Game(level_id=LEVEL_ID, all_levels=LEVELS)
-g = Graphics()
-TILE_SIZE = g.TILE_WIDTH, g.TILE_HEIGHT
+game = Game(all_levels=LEVELS)
 
 
 def next_level():
-	g.display_game(game.level, game.player)
-	g.SCREEN.blit(g.GAME_AREA, (0, 0))
+	game.GUI.display_game(game.level, game.player)
+	game.GUI.SCREEN.blit(game.GUI.GAME_AREA, (0, 0))
 	pygame.display.flip()
 
 
@@ -120,18 +115,19 @@ def main():
 			if valid:
 				# actually moves the player
 				valid = False
-				g.update_game(
+				game.GUI.update_game(
 					game.player, game.level,
-					tmp_pos)
+					tmp_pos
+				)
 
 				# reset - uncover
-				g.SCREEN.blit(g.GAME_AREA, (0, 0))
+				game.GUI.SCREEN.blit(game.GUI.GAME_AREA, (0, 0))
 				pygame.display.flip()
 
 				if game._check_end():
 					game.player.update_best_score(
 						game.level_id,
-						game.level["name"],
+						game.level.name,
 						game.player.moves
 					)
 					if game._check_has_more_levels():
@@ -148,7 +144,7 @@ def main():
 		#get the current real time
 		T = pygame.time.get_ticks()
 
-		#if elapsed time since last frame is too long...
+		#if elapsed time since last frame is too longame.GUI...
 		if T-now > max_frame_time:
 			#slow the game down by resetting clock
 			now = T - step_size
