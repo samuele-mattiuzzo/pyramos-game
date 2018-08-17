@@ -1,3 +1,4 @@
 *.DS_Store*
 *.pyc
 *pyramos-game-py3*
+*__pycache__*
