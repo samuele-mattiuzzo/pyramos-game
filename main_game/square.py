@@ -1,8 +1,8 @@
 try:
 	import pygame
 	from pygame.locals import *
-except ImportError, err:
-	print "couldn't load module. %s" % (err)
+except ImportError as err:
+	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
 

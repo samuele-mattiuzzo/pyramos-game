@@ -2,8 +2,8 @@ try:
 	import os
 	import pygame
 	from pygame.locals import *
-except ImportError, err:
-	print "couldn't load module. %s" % (err)
+except ImportError as err:
+	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
 class System:
@@ -70,8 +70,8 @@ class System:
 	## utilities functions
 
 	def load_png(self, name):
-		""" 
-			Load image and return image object 
+		"""
+			Load image and return image object
 			(utility, slightly modified, from http://www.pygame.org/docs/tut/tom/games3.html - 3.2)
 		"""
 		fullname = os.sep.join([os.getcwd(), "resources", "imgs", self.mode, name])
@@ -81,9 +81,10 @@ class System:
 				image = image.convert()
 			else:
 				image = image.convert_alpha()
-		
-		except pygame.error, message:
-        		print 'Cannot load image:', fullname
-        		raise SystemExit, message
-		
+
+		except pygame.error as message:
+				print('Cannot load image: %s' % fullname)
+				print(message)
+				raise SystemExit
+
 		return pygame.transform.scale(image, (self.tile_x, self.tile_y))

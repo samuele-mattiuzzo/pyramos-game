@@ -2,8 +2,8 @@ try:
 	import pygame
 	from pygame.locals import *
 	#import pgu
-except ImportError, err:
-	print "couldn't load module. %s" % (err)
+except ImportError as err:
+	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
 
@@ -56,7 +56,7 @@ class Graphics:
 			for j in range(10): # column
 				if (i,j) != player.pos:
 					self.drawSquare(game_area, (i,j), stype=0) # draw covered square
-			
+
 				else:
 					self.drawSquare(game_area, (i,j), stype=5) # draw player on start position
 
@@ -89,7 +89,7 @@ class Graphics:
 		'''
 		self.drawSquare(game_area, pos, stype=5) # moves the player
 		screen.blit(game_area, (0, 0))
-	
+
 	def update_uncovered(self, screen, game_area, level, player, UNCOVERED):
 		'''
 			Uncovers squares around the player
@@ -100,28 +100,28 @@ class Graphics:
 		# control top
 		UNCOVERED["top"] = (player_pos[0]-1, player_pos[1])
 		if UNCOVERED["top"][0] > -1:
-			self.drawSquare(game_area, 
+			self.drawSquare(game_area,
 				UNCOVERED["top"], # pos * tile size
 				stype=lmap[UNCOVERED["top"][0]][UNCOVERED["top"][1]]) # square type from map
 
 		# control right
 		UNCOVERED["right"] = (player_pos[0], player_pos[1]+1)
 		if UNCOVERED["right"][1] < 10:
-			self.drawSquare(game_area, 
+			self.drawSquare(game_area,
 				UNCOVERED["right"], # pos * tile size
 				stype=lmap[UNCOVERED["right"][0]][UNCOVERED["right"][1]]) # square type from map
 
 		# control bottom
 		UNCOVERED["bottom"] = (player_pos[0]+1, player_pos[1])
 		if UNCOVERED["bottom"][0] < 10:
-			self.drawSquare(game_area, 
+			self.drawSquare(game_area,
 				UNCOVERED["bottom"], # pos * tile size
 				stype=lmap[UNCOVERED["bottom"][0]][UNCOVERED["bottom"][1]]) # square type from map
 
 		# control left
 		UNCOVERED["left"] = (player_pos[0], player_pos[1]-1)
 		if UNCOVERED["left"][0] > -1:
-			self.drawSquare(game_area, 
+			self.drawSquare(game_area,
 				UNCOVERED["left"], # pos * tile size
 				stype=lmap[UNCOVERED["left"][0]][UNCOVERED["left"][1]]) # square type from map
 

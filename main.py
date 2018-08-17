@@ -15,8 +15,8 @@ try:
 	from main_game.gui import *
 	from main_game.system import *
 
-except ImportError, err:
-	print "couldn't load module. %s" % (err)
+except ImportError as err:
+	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
 ## GLOBAL VARIABLES
@@ -38,7 +38,7 @@ PLAYER = Player()
 PLAYER.newStart(LEVEL.start)
 GAME_AREA = pygame.Surface(screen.get_size())
 UNCOVERED = {
-	#"dir":     x,y
+	#"dir":	 x,y
 	"top" : 	(),
 	"right" : 	(),
 	"bottom" : 	(),
@@ -53,7 +53,7 @@ g = Graphics(TILE_HEIGHT, TILE_WIDTH, WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, S
 
 def nextLevel():
 	global LEVEL, PLAYER, GAME_AREA
-	if not LEVEL_ID == LEVEL.id:	
+	if not LEVEL_ID == LEVEL.id:
 		LEVEL = Level(LEVEL_ID)
 		PLAYER.newStart(LEVEL.start)
 
@@ -124,7 +124,7 @@ def main():
 
 		for event in pygame.event.get():
 			if event.type == QUIT:
-				print "Bye!"
+				print("Bye!")
 				sys.exit()
 
 			elif event.type == pygame.KEYDOWN:
@@ -132,20 +132,20 @@ def main():
 					sys.exit()
 				else:
 					if event.key == pygame.K_UP:
-						pressed =  "UP"  
-					elif event.key == pygame.K_DOWN: 
-						pressed =  "DOWN" 
+						pressed =  "UP"
+					elif event.key == pygame.K_DOWN:
+						pressed =  "DOWN"
 					elif event.key == pygame.K_RIGHT:
-						pressed =  "RIGHT" 
+						pressed =  "RIGHT"
 					elif event.key == pygame.K_LEFT:
-						pressed =  "LEFT" 
+						pressed =  "LEFT"
 
 				valid, is_dead, tmp_pos = newValidPos(PLAYER.pos, pressed, LEVEL.design)
 
 		if is_dead:
-			print "You touched a poisonous wall! You are dead!"
-			print "Your score is: " + str(PLAYER.moves)
-			print "Bye!"
+			print("You touched a poisonous wall! You are dead!")
+			print("Your score is: %s" % str(PLAYER.moves))
+			print("Bye!")
 			sys.exit()
 
 		else:
@@ -164,12 +164,12 @@ def main():
 					if LEVEL_ID < len(LEVELS):
 						nextLevel() # continue
 					else:
-						print "YOU WON!"
-						print "You completed " + str(LEVEL_ID) + " stages with a total of " + str(PLAYER.moves) + " steps"
-						print "\nScores:"
+						print("YOU WON!")
+						print("You completed %s stages with a total of %s steps" % (str(LEVEL_ID), str(PLAYER.moves)))
+						print("\nScores:")
 						scores = PLAYER.getBestScores()
 						for i in scores:
-							print "%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1]))
+							print("%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1])))
 						__cycle = False
 
 		#get the current real time
