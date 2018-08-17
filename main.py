@@ -35,7 +35,7 @@ TILE_SIZE = TILE_WIDTH, TILE_HEIGHT = game_sys.get_images_properties()
 LEVEL_ID = 0 # beginning of the game
 LEVEL = Level(LEVEL_ID)
 PLAYER = Player()
-PLAYER.newStart(LEVEL.start)
+PLAYER.new_start(LEVEL.start)
 GAME_AREA = pygame.Surface(screen.get_size())
 UNCOVERED = {
 	#"dir":	 x,y
@@ -51,22 +51,22 @@ UNCOVERED = {
 # graphics creation
 g = Graphics(TILE_HEIGHT, TILE_WIDTH, WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE)
 
-def nextLevel():
+def next_level():
 	global LEVEL, PLAYER, GAME_AREA
 	if not LEVEL_ID == LEVEL.id:
 		LEVEL = Level(LEVEL_ID)
-		PLAYER.newStart(LEVEL.start)
+		PLAYER.new_start(LEVEL.start)
 
 	g.display_game(screen, GAME_AREA, LEVEL, PLAYER, UNCOVERED)
 	screen.blit(GAME_AREA, (0, 0))
 	pygame.display.flip()
 
 # checks the end square
-def checkEndLevel(player_pos, end):
+def check_end_level(player_pos, end):
 	return player_pos == end
 
 # checks for the new player move and returns the new position. false if it's not (player dies!)
-def newValidPos(player_pos, keyName, lmap):
+def new_valid_pos(player_pos, keyName, lmap):
 	valid = False
 	is_dead = False
 	pos = player_pos
@@ -112,7 +112,7 @@ def main():
 	now = pygame.time.get_ticks()
 
 	# first draw
-	nextLevel()
+	next_level()
 
 	__cycle = True
 	valid = is_dead = False
@@ -140,7 +140,7 @@ def main():
 					elif event.key == pygame.K_LEFT:
 						pressed =  "LEFT"
 
-				valid, is_dead, tmp_pos = newValidPos(PLAYER.pos, pressed, LEVEL.design)
+				valid, is_dead, tmp_pos = new_valid_pos(PLAYER.pos, pressed, LEVEL.design)
 
 		if is_dead:
 			print("You touched a poisonous wall! You are dead!")
@@ -157,17 +157,17 @@ def main():
 				screen.blit(GAME_AREA, (0, 0))
 				pygame.display.flip()
 
-				if checkEndLevel(PLAYER.pos, LEVEL.end):
+				if check_end_level(PLAYER.pos, LEVEL.end):
 					global LEVEL_ID
-					PLAYER.updateBestScore(LEVEL_ID, LEVELS[LEVEL_ID]["name"], PLAYER.moves)
+					PLAYER.update_best_scores(LEVEL_ID, LEVELS[LEVEL_ID]["name"], PLAYER.moves)
 					LEVEL_ID += 1
 					if LEVEL_ID < len(LEVELS):
-						nextLevel() # continue
+						next_level() # continue
 					else:
 						print("YOU WON!")
 						print("You completed %s stages with a total of %s steps" % (str(LEVEL_ID), str(PLAYER.moves)))
 						print("\nScores:")
-						scores = PLAYER.getBestScores()
+						scores = PLAYER.get_best_scores()
 						for i in scores:
 							print("%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1])))
 						__cycle = False

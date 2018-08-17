@@ -46,7 +46,7 @@ class System:
 		'''
 		self.mode = mode
 
-	def load_images(self, mode="classic"):
+	def load_images(self):
 		'''
 			Preloads all the images based on mod selected
 			@returns all the images, scaled based on the system configuration
@@ -57,7 +57,6 @@ class System:
 		wlk_spr = self.load_png("tile_walk.png")
 		s_spr = self.load_png("tile_start.png")
 		e_spr = self.load_png("tile_end.png")
-		#bg_spr = self.load_png("tile_bg_menu.png")
 
 		return wa_spr, p_spr, wlk_spr, s_spr, e_spr
 
