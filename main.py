@@ -85,11 +85,7 @@ def main():
 	now = pygame.time.get_ticks()
 
 	# first draw
-	game.next_level()
-	g.update_game(
-		game.player, game.level,
-		game.player.pos
-	)
+	next_level()
 
 	__cycle = True
 	valid = is_dead = False
