@@ -6,7 +6,7 @@ class Player:
 
 	def __init__(self):
 		self.name = 'Player'
-		self.pos = (0,0)
+		self.pos = (0, 0)
 		self.moves = 0
 		self.deaths = 0
 		self.best = {}

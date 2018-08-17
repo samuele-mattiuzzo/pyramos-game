@@ -9,6 +9,7 @@ try:
 	from resources.levels import *
 
 	# main game classes imports
+    from main_game.game import *
 	from main_game.level import *
 	from main_game.player import *
 	from main_game.square import *
@@ -33,10 +34,13 @@ TILE_SIZE = TILE_WIDTH, TILE_HEIGHT = game_sys.get_images_properties()
 
 # level preconfiguration
 LEVEL_ID = 0 # beginning of the game
-LEVEL = Level(LEVEL_ID)
-PLAYER = Player()
-PLAYER.new_start(LEVEL.start)
+game = Game(
+    level_id=LEVEL_ID
+    levels=LEVELS
+)
+
 GAME_AREA = pygame.Surface(screen.get_size())
+
 UNCOVERED = {
 	#"dir":	 x,y
 	"top" : 	(),
@@ -52,18 +56,10 @@ UNCOVERED = {
 g = Graphics(TILE_HEIGHT, TILE_WIDTH, WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE)
 
 def next_level():
-	global LEVEL, PLAYER, GAME_AREA
-	if not LEVEL_ID == LEVEL.id:
-		LEVEL = Level(LEVEL_ID)
-		PLAYER.new_start(LEVEL.start)
-
-	g.display_game(screen, GAME_AREA, LEVEL, PLAYER, UNCOVERED)
+	g.display_game(screen, GAME_AREA, game.level, game.player, UNCOVERED)
 	screen.blit(GAME_AREA, (0, 0))
 	pygame.display.flip()
 
-# checks the end square
-def check_end_level(player_pos, end):
-	return player_pos == end
 
 # checks for the new player move and returns the new position. false if it's not (player dies!)
 def new_valid_pos(player_pos, keyName, lmap):
@@ -71,28 +67,28 @@ def new_valid_pos(player_pos, keyName, lmap):
 	is_dead = False
 	pos = player_pos
 
-	if keyName == "LEFT" and player_pos[1]>0:
+	if keyName == pygame.K_LEFT and player_pos[1]>0:
 		if lmap[player_pos[0]][player_pos[1]-1] != 0:
 			pos = (pos[0], pos[1]-1)
 			valid = True
 		else:
 			is_dead = True
 
-	if keyName == "RIGHT" and player_pos[1]<9:
+	if keyName == pygame.K_RIGHT and player_pos[1]<9:
 		if lmap[player_pos[0]][player_pos[1]+1] != 0:
 			pos = (pos[0], pos[1]+1)
 			valid = True
 		else:
 			is_dead = True
 
-	if keyName == "UP" and player_pos[0]>0:
+	if keyName == pygame.K_UP and player_pos[0]>0:
 		if lmap[player_pos[0]-1][player_pos[1]] != 0:
 			pos = (pos[0]-1, pos[1])
 			valid = True
 		else:
 			is_dead = True
 
-	if keyName == "DOWN" and player_pos[0]<9:
+	if keyName == pygame.K_DOWN and player_pos[0]<9:
 		if lmap[player_pos[0]+1][player_pos[1]] != 0:
 			pos = (pos[0]+1, pos[1])
 			valid = True
@@ -112,7 +108,7 @@ def main():
 	now = pygame.time.get_ticks()
 
 	# first draw
-	next_level()
+	game.next_level()
 
 	__cycle = True
 	valid = is_dead = False
@@ -131,20 +127,15 @@ def main():
 				if event.key == pygame.K_ESCAPE:
 					sys.exit()
 				else:
-					if event.key == pygame.K_UP:
-						pressed =  "UP"
-					elif event.key == pygame.K_DOWN:
-						pressed =  "DOWN"
-					elif event.key == pygame.K_RIGHT:
-						pressed =  "RIGHT"
-					elif event.key == pygame.K_LEFT:
-						pressed =  "LEFT"
-
-				valid, is_dead, tmp_pos = new_valid_pos(PLAYER.pos, pressed, LEVEL.design)
+					valid, is_dead, tmp_pos = new_valid_pos(
+                        game.player.pos,
+                        event.key,
+                        game.level.design
+                    )
 
 		if is_dead:
 			print("You touched a poisonous wall! You are dead!")
-			print("Your score is: %s" % str(PLAYER.moves))
+			print("Your score is: %s" % str(game.player.moves))
 			print("Bye!")
 			sys.exit()
 
@@ -152,22 +143,30 @@ def main():
 			if valid:
 				# actually moves the player
 				valid = False
-				g.update_game(screen, GAME_AREA, PLAYER, LEVEL, tmp_pos, UNCOVERED)
-				# reset - uncover
+				g.update_game(
+                    screen, GAME_AREA,
+                    game.player, game.level,
+                    tmp_pos, UNCOVERED
+                )
+
+                # reset - uncover
 				screen.blit(GAME_AREA, (0, 0))
 				pygame.display.flip()
 
-				if check_end_level(PLAYER.pos, LEVEL.end):
+				if game._check_end():
 					global LEVEL_ID
-					PLAYER.update_best_scores(LEVEL_ID, LEVELS[LEVEL_ID]["name"], PLAYER.moves)
-					LEVEL_ID += 1
-					if LEVEL_ID < len(LEVELS):
-						next_level() # continue
+					game.player.update_best_score(
+                        game.level_id,
+                        game.level["name"],
+                        game.player.moves
+                    )
+                    if game._check_has_more_levels()
+                        game.next_level()
 					else:
 						print("YOU WON!")
-						print("You completed %s stages with a total of %s steps" % (str(LEVEL_ID), str(PLAYER.moves)))
+						print("You completed %s stages with a total of %s steps" % (str(game.level_id), str(game.player.moves)))
 						print("\nScores:")
-						scores = PLAYER.get_best_scores()
+						scores = game.player.get_best_scores()
 						for i in scores:
 							print("%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1])))
 						__cycle = False

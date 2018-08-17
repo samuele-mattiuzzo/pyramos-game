@@ -19,14 +19,17 @@ class Graphics:
 	'''
 
 	def __init__(self, TILE_HEIGHT, TILE_WIDTH, WALL_SPRITE, PLAYER_SPRITE, WALK_SPRITE, START_SPRITE, END_SPRITE):
-		self.WALK_SPRITE = WALK_SPRITE
+        self.GAME_AREA = pygame.Surface(screen.get_size())
+
+        self.WALK_SPRITE = WALK_SPRITE
 		self.PLAYER_SPRITE = PLAYER_SPRITE
 		self.WALL_SPRITE = WALL_SPRITE
 		self.START_SPRITE = START_SPRITE
 		self.END_SPRITE = END_SPRITE
 		self.TILE_HEIGHT = TILE_HEIGHT
 		self.TILE_WIDTH = TILE_WIDTH
-		self.TILE_MAP = {
+
+        self.TILE_MAP = {
 			0: self.WALL_SPRITE,
 			1: self.WALK_SPRITE,
 			2: self.START_SPRITE,
