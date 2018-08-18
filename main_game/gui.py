@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 try:
 	import pygame
 	from pygame.locals import *

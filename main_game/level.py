@@ -1,6 +1,6 @@
-from main_game import square
+# -*- coding: utf-8 -*-
 from resources.levels import *
-from resources.config import *
+
 
 class Level:
 
@@ -12,7 +12,3 @@ class Level:
 		self.end = LEVELS[id]['end']
 		self.music = LEVELS[id]['background_music']
 		self.completion = LEVELS[id]['top_score']
-
-		
-		
-

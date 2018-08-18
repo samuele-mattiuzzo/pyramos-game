@@ -1,7 +1,4 @@
-from main_game import square
-from resources.levels import *
-from resources.config import *
-
+# -*- coding: utf-8 -*-
 class Player:
 
 	def __init__(self):
@@ -29,7 +26,9 @@ class Player:
 			if new_score < self.best[id]:
 				self.best[id][1] = new_score
 		else:
-			self.best[id] = (name, new_score)
+			self.best.update({
+				id: (name, new_score)
+			})
 
 	def get_best_scores(self):
 		return self.best
