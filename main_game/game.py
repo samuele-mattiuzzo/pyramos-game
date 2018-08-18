@@ -143,16 +143,8 @@ class Game:
 	def _draw_move(self, pos):
 		self.__GUI.update_game(self.__player, self.__level, pos)
 
-		# reset - uncover
-		self.__GUI.SCREEN.blit(self.__GUI.GAME_AREA, (0, 0))
-		pygame.display.flip()
-
 	def _draw_level(self):
-		self.__GUI.display_game(self.__level, self.__player)
-
-		# reset - uncover
-		self.__GUI.SCREEN.blit(self.__GUI.GAME_AREA, (0, 0))
-		pygame.display.flip()
+		self.__GUI.display_game(self.__player, self.__level)
 
 	def _handle_move(self):
 		if self._check_end():
