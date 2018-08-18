@@ -30,7 +30,6 @@ class Game:
 		self.__level = Level(self.__level_id)
 		self.__player = Player()
 		self.__player.new_start(self.__level.start)
-
 		self.__GUI = Graphics()
 
 	def start(self):
@@ -49,6 +48,7 @@ class Game:
 				self.__move = self._new_valid_pos(event.key)
 
 	def cleanup(self):
+		self.__running = False
 		print("Bye!")
 		pygame.quit()
 
@@ -89,7 +89,6 @@ class Game:
 	def update(self):
 		if self.__move:
 			valid, tmp_pos = self.__move
-			self.__cycle = valid
 			if not valid:
 				self._handle_death()
 			else:
@@ -139,8 +138,7 @@ class Game:
 	def _handle_death(self):
 		print("You touched a poisonous wall! You are dead!")
 		print("Your score is: %s" % str(self.__player.moves))
-		print("Bye!")
-		self.cleanup()
+		self.__running = False
 
 	def _draw_move(self, pos):
 		self.__GUI.update_game(self.__player, self.__level, pos)
