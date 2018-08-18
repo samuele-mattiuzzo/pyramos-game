@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 try:
 	import os
 	import pygame
@@ -5,6 +6,7 @@ try:
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
+
 
 class System:
 	'''
@@ -21,23 +23,22 @@ class System:
 		self.tile_size = self.tile_x, self.tile_y = (32,32)
 		self.mode = "classic"
 
-
 	def get_properties(self):
 		'''
 			Gets system propeties
 			NotYetImplemented: may be done in __init__()?
 		'''
 		video = pygame.display.Info()
-		self.res = (video.current_w, video.current_h)
+		self.res = (video.current_w//2 + 50, video.current_h//2 + 50)
 		self.surface_size = (self.res[1], self.res[1])
 		self.tile_size = self.tile_x, self.tile_y = (int(self.res[1]/10), int(self.res[1]/10))
-
 
 	def get_screen(self):
 		'''
 			Creates and returns a new screen
 		'''
-		return pygame.display.set_mode(self.res, FULLSCREEN)
+		return pygame.display.set_mode(
+			self.res)
 
 	def load_mode(self, mode):
 		'''
@@ -67,7 +68,6 @@ class System:
 		return self.tile_x, self.tile_y
 
 	## utilities functions
-
 	def load_png(self, name):
 		"""
 			Load image and return image object

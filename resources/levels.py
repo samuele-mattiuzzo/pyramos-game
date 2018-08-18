@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 	Contains level design and definition
 	Square types :
@@ -10,12 +11,12 @@
 
 LEVELS = [
 
-{	
+{
 
 	"id" : 0,
 
 	"name" : "Ossirian's tomb",
-	
+
 	"design" : [
 				[0,0,0,0,0,0,1,1,1,3],
 				[0,0,1,1,1,0,0,1,0,0],
@@ -33,16 +34,16 @@ LEVELS = [
 	"end" : (0, 9),
 
 	"background_music" : "",
-	"top_score" : 18, 
+	"top_score" : 18,
 
 },
 
-{	
+{
 
 	"id" : 1,
 
 	"name" : "Temple of Doom",
-	
+
 	"design" : [
 				[0,0,0,0,0,0,1,1,1,3],
 				[0,1,1,0,1,0,0,1,0,0],
@@ -60,7 +61,7 @@ LEVELS = [
 	"end" : (9, 3),
 
 	"background_music" : "",
-	"top_score" : 18, 
+	"top_score" : 18,
 
 },
 
