@@ -73,6 +73,14 @@ class System:
 		return wa_spr, p_spr, wlk_spr, s_spr, e_spr
 
 	## utilities functions
+	def load_font(self):
+		fontname = os.sep.join([os.getcwd(), "resources", conf.FONT_NAME])
+
+		return pygame.font.Font(
+			fontname,
+			conf.FONT_SIZE
+		)
+
 	def load_png(self, name):
 		"""
 			Load image and return image object

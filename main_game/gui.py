@@ -30,6 +30,7 @@ class Graphics:
 
 		self.__SCREEN = self.__SYS.get_screen()
 		self.__GAME_AREA = pygame.Surface(self.__SCREEN.get_size())
+		self.__FONT = self.__SYS.load_font()
 
 		self._setup_tile_map()
 		self._setup_game_tiles()
@@ -78,8 +79,8 @@ class Graphics:
 		'''
 		self.update_game(player, level, level.start)
 
-	def display_gui(self):
-		pass
+	def display_gui(self, player, level):
+		self.update_gui(player, level, level.start)
 
 	def update_game(self, player, level, new_pos):
 		'''
@@ -92,7 +93,7 @@ class Graphics:
 		self.__SCREEN.blit(self.__SCREEN, (0, 0))
 		pygame.display.flip()
 
-	def update_gui(self):
+	def update_gui(self, player, level, new_pos):
 		'''
 			Updates messages on the GUI
 		'''
