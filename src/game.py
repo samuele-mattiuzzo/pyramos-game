@@ -34,6 +34,7 @@ class Game:
 		self.__player.new_start(self.__level.start)
 		self.__g = GameGraphics()
 		self.__ui = GameUi()
+		self.__CLOCK = pygame.time.Clock()
 
 	def new_game(self):
 		self.init()
@@ -44,6 +45,9 @@ class Game:
 		pass
 
 	def on_event(self, event):
+		if event.type == pygame.QUIT:
+			self.cleanup()
+
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_ESCAPE:
 				self.cleanup()
@@ -52,15 +56,9 @@ class Game:
 
 	def cleanup(self):
 		self.__running = False
-		print("Bye!")
 		pygame.quit()
 
 	def execute(self):
-		#time is specified in milliseconds
-		#fixed simulation step duration
-		#max duration to render a frame
-		step_size, max_frame_time = 500, 100
-		now = pygame.time.get_ticks()
 		self.__running = True
 
 		self._draw_level()
@@ -72,20 +70,7 @@ class Game:
 			self.update()
 			self.__ui.overlay(self, self.__player, self.__level)
 
-			#get the current real time
-			T = pygame.time.get_ticks()
-
-			#if elapsed time since last frame is too longame.GUI...
-			if T-now > max_frame_time:
-				now = T - step_size  #slow the game down by resetting clock
-
-			#this code will run only when enough time has passed, and will
-			#catch up to wall time if needed.
-			while(T-now >= step_size):
-				now += step_size  #save old game state, update new game state based on step_size
-			else:
-				pygame.time.wait(10)
-
+			self.__CLOCK.tick(60)
 		self.cleanup()
 
 	def update(self):
@@ -174,6 +159,9 @@ class Game:
 			self.__player.moves
 		)
 		self.__ui.end_game_screen(self.__player, victory)
+
+		if self.__ui.new_game:
+			self.new_game()
 
 	# getters
 	@property
