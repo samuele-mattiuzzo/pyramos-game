@@ -139,8 +139,7 @@ class Game:
 		return self.level_id + 1 < len(LEVELS)
 
 	def _handle_death(self):
-		print("You touched a poisonous wall! You are dead!")
-		print("Your score is: %s" % str(self.__player.moves))
+		self._handle_end_game()
 		self.__running = False
 
 	def _draw_move(self, pos):
@@ -155,7 +154,7 @@ class Game:
 			if self._check_has_more_levels():
 				self._next_level()
 			else:
-				self._handle_end_game()
+				self._handle_end_game(victory=True)
 
 	def _handle_end_level(self):
 		self.__player.update_best_score(
@@ -163,15 +162,15 @@ class Game:
 			self.__level.name,
 			self.__player.moves
 		)
+		self.__ui.end_level_screen(self.__player, self.__level)
 
-	def _handle_end_game(self):
-		print("YOU WON!")
-		print("You completed %s stages with a total of %s steps" % (str(self.__level_id), str(self.__player.moves)))
-		print("\nScores:")
-		scores = self.__player.get_best_scores()
-		for i in scores:
-			print("%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1])))
-		self.__running = False
+	def _handle_end_game(self, victory=False):
+		self.__player.update_best_score(
+			self.__level_id,
+			self.__level.name,
+			self.__player.moves
+		)
+		self.__ui.end_game_screen(self.__player, victory)
 
 	# getters
 	@property
