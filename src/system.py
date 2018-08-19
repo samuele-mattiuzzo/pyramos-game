@@ -53,6 +53,9 @@ class System:
 			(self.__window_height//2) - (self.__tile_height//2),
 		)
 
+	def get_screen_origin_no_offset(self):
+		return (self.__window_width//2, self.__window_height//2)
+
 	def load_mode(self, mode):
 		'''
 			Used to change mode (other than default for "classic")

@@ -24,7 +24,7 @@ class GameUi:
 		self.__SCREEN = self.__SYS.get_screen()
 		self.__GAME_AREA = pygame.Surface(self.__SCREEN.get_size())
 		#self.__FONT = pygame.font.Font('freesansbold.ttf',115)
-		self.__ORIGIN = self.__SYS.get_screen_origin()
+		self.__ORIGIN = self.__SYS.get_screen_origin_no_offset()
 
 		self.__ON_UI = False
 		self.__CLOCK = pygame.time.Clock()
@@ -33,20 +33,23 @@ class GameUi:
 		self.__SCREEN.fill((0,0,0))
 
 		# game title
-		self._draw_text(message="PYRAMOS",
-			pos=(self.__ORIGIN[0] + 50, self.__ORIGIN[1] - 150))
+		game_title = "PYRAMOS"
+		self._draw_text(message=game_title, y=-150)
 
 		# new game
-		self._draw_text(message="Press SPACEBAR to start a new game",
-			size=25, pos=(self.__ORIGIN[0] + 25, self.__ORIGIN[1]))
+		spacebar = "Press SPACEBAR to start a new game"
+		self._draw_text(message=spacebar, size=25)
 
 		# other options
-		self._draw_text(message="[S]ound on/off",
-			size=18, pos=(self.__ORIGIN[0] - 100, self.__ORIGIN[1] + 150))
-		self._draw_text(message="[L]eaderboards",
-			size=18, pos=(self.__ORIGIN[0] + 50, self.__ORIGIN[1] + 150))
-		self._draw_text(message="[Q]uit",
-			size=18, pos=(self.__ORIGIN[0] + 200, self.__ORIGIN[1] + 150))
+		sound_text = "[S]ound on/off"
+		leaderboard_text = "[L]eaderboards"
+		quit_text = "[Q]uit"
+
+		options_text = sound_text + leaderboard_text + quit_text
+		self._draw_text(message=options_text, size=18, y=100)
+
+		copy_text = "samumatt@gmail.com | &copy; 2018"
+		self._draw_text(message=copy_text, size=18, y=200)
 
 		self._ui_key_listener()
 
@@ -55,25 +58,19 @@ class GameUi:
 		self.__SCREEN.fill((0,0,0))
 
 		level_title = "%s completed" % level.name
-		self._draw_text(message=level_title,
-			pos=(self.__ORIGIN[0] - len(level_title)//2, self.__ORIGIN[1] - 150))
+		self._draw_text(message=level_title, y=-150)
 
 		score_header = "Score"
-		self._draw_text(message=score_header,
-			size=18, pos=(self.__ORIGIN[0] - len(score_header)//2, self.__ORIGIN[1]))
+		self._draw_text(message=score_header, size=18)
 
 		moves_text = "Moves: %s" % player.moves
 		deaths_text = "Deaths: %s" % player.deaths
-		self._draw_text(message=moves_text,
-			size=18, pos=(self.__ORIGIN[0] - len(moves_text)//2, self.__ORIGIN[1] + 50))
-
-		self._draw_text(message=deaths_text,
-			size=18, pos=(self.__ORIGIN[0] - len(moves_text)//2, self.__ORIGIN[1] + 100))
+		self._draw_text(message=moves_text, size=18, y=50)
+		self._draw_text(message=deaths_text, size=18, y=100)
 
 		# new game
-		spacebar = "Press SPACEBAR to continue"
-		self._draw_text(message=spacebar,
-			size=25, pos=(self.__ORIGIN[0] - len(spacebar)//2, self.__ORIGIN[1] + 150))
+		spacebar = "Press SPACEBAR to continue..."
+		self._draw_text(message=spacebar, size=25, y=150)
 
 		self._ui_key_listener()
 
@@ -84,22 +81,19 @@ class GameUi:
 		beat_levels = len(scores)
 
 		final_message = "YOU BEAT THE GAME" if victory else "YOU WERE DEFEATED"
-		self._draw_text(message=final_message,
-			pos=(self.__ORIGIN[0] - len(final_message)//2, self.__ORIGIN[1] - 150))
+		self._draw_text(message=final_message, y=-150)
 
 		completion_message = "You completed %s stages totalling %s moves and %s deaths" % (
 			beat_levels, player.moves, player.deaths)
-		self._draw_text(message=completion_message,
-			size=25, pos=(self.__ORIGIN[0] - len(completion_message)//2, self.__ORIGIN[1] - 125))
+		self._draw_text(message=completion_message, size=25, y=-125)
 
 		for i in scores:
 			score = "%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1]))
-			self._draw_text(message=score,
-				size=18, pos=(self.__ORIGIN[0] - len(score)//2, self.__ORIGIN[1] + i*18))
+			self._draw_text(message=score, size=18, y=i*18)
 
 		# new game
-		self._draw_text(message="Press SPACEBAR to continue",
-			size=25, pos=(self.__ORIGIN[0] + 25, self.__ORIGIN[1] + (len(scores)*18)+25))
+		spacebar = "Press SPACEBAR return to main menu"
+		self._draw_text(message=spacebar, size=25, y=(len(scores)*18)+25)
 
 		self._ui_key_listener()
 
@@ -125,6 +119,7 @@ class GameUi:
 						self.__ON_UI = False
 					if event.key == pygame.K_m:
 						self.__ON_UI = False
+
 			self.__CLOCK.tick(15)
 
 
@@ -132,9 +127,12 @@ class GameUi:
 		textSurface = font.render(text, True, (255,255,255))
 		return textSurface, textSurface.get_rect()
 
-	def _draw_text(self, message, pos, size=conf.FONT_SIZE):
+	def _draw_text(self, message, x=0, y=0, size=conf.FONT_SIZE):
 		font = self.__SYS.load_font(size)
 		TextSurf, TextRect = self._text_objects(message, font)
-		TextRect.center = pos
+		TextRect.center = self._get_offset_pos(x, y)
 		self.__SCREEN.blit(TextSurf, TextRect)
 		pygame.display.update()
+
+	def _get_offset_pos(self, offset_x, offset_y):
+		return (self.__ORIGIN[0] + offset_x, self.__ORIGIN[1] + offset_y)
