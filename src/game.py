@@ -44,9 +44,7 @@ class Game:
 		pass
 
 	def on_event(self, event):
-		if event.type == QUIT:
-			self.cleanup()
-		elif event.type == pygame.KEYDOWN:
+		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_ESCAPE:
 				self.cleanup()
 			else:
@@ -92,16 +90,18 @@ class Game:
 
 	def update(self):
 		if self.__move:
-			valid, tmp_pos = self.__move
-			if not valid:
-				self._handle_death()
-			else:
-				self._draw_move(tmp_pos)
-				self._handle_move()
+			valid, tmp_pos, fluke = self.__move
+			if not fluke:
+				if not valid:
+					self._handle_death()
+				else:
+					self._draw_move(tmp_pos)
+					self._handle_move()
 
 	# internal utilities
 	def _new_valid_pos(self, key_pressed):
 		valid = False
+		fluke = False
 		pos = x, y = self.__player.pos
 
 		if key_pressed == pygame.K_LEFT and y>0:
@@ -109,22 +109,24 @@ class Game:
 				pos = (x, y-1)
 				valid = True
 
-		if key_pressed == pygame.K_RIGHT and y<9:
+		elif key_pressed == pygame.K_RIGHT and y<9:
 			if self.__level.design[x][y+1] != 0:
 				pos = (x, y+1)
 				valid = True
 
-		if key_pressed == pygame.K_UP and x>0:
+		elif key_pressed == pygame.K_UP and x>0:
 			if self.__level.design[x-1][y] != 0:
 				pos = (x-1, y)
 				valid = True
 
-		if key_pressed == pygame.K_DOWN and x<9:
+		elif key_pressed == pygame.K_DOWN and x<9:
 			if self.__level.design[x+1][y] != 0:
 				pos = (x+1, y)
 				valid = True
+		else:
+			fluke = True
 
-		return valid, pos
+		return valid, pos, fluke
 
 	def _next_level(self):
 		self.__level_id += 1
