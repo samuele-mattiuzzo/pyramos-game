@@ -7,6 +7,7 @@ try:
 	from src.game_stages import LEVELS
 	from src.level import Level
 	from src.player import Player
+	from src.game_ui import GameUi
 	from src.game_graphics import GameGraphics
 
 except ImportError as err:
@@ -22,6 +23,7 @@ class Game:
 		self.__player = None
 		self.__level = None
 		self.__g = None
+		self.__ui = None
 
 		self.__move = None  # used to store the current move
 		self.__running = False  # used to determine if the game is running or not
@@ -31,9 +33,12 @@ class Game:
 		self.__player = Player()
 		self.__player.new_start(self.__level.start)
 		self.__g = GameGraphics()
+		self.__ui = GameUi()
 
-	def start(self):
-		pass
+	def new_game(self):
+		self.init()
+		self.__ui.start_screen()
+		self.execute()
 
 	def end(self):
 		pass
@@ -53,8 +58,6 @@ class Game:
 		pygame.quit()
 
 	def execute(self):
-		self.init()
-
 		#time is specified in milliseconds
 		#fixed simulation step duration
 		#max duration to render a frame
@@ -184,9 +187,5 @@ class Game:
 		return self.__level
 
 	@property
-	def all_levels(self):
-		return LEVELS
-
-	@property
-	def gui(self):
+	def g(self):
 		return self.__g

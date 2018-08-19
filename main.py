@@ -18,4 +18,4 @@ pygame.init()
 
 if __name__ == "__main__":
 	game = Game()
-	game.execute()
+	game.new_game()

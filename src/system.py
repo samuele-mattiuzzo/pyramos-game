@@ -23,7 +23,7 @@ class System:
 	def __init__(self):
 		self.__res = self.__window_width, self.__window_height = conf.WINDOW_SIZE
 		self.__tile_size = self.__tile_width, self.__tile_height = conf.TILE_SIZE
-		self.__mode = "classic"
+		self.__mode = "retro"
 
 	@property
 	def res(self):
@@ -75,13 +75,9 @@ class System:
 		return wa_spr, p_spr, wlk_spr, s_spr, e_spr
 
 	## utilities functions
-	def load_font(self):
+	def load_font(self, size=conf.FONT_SIZE):
 		fontname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.FONT_FOLDER, conf.FONT_NAME])
-
-		return pygame.font.Font(
-			fontname,
-			conf.FONT_SIZE
-		)
+		return pygame.font.Font(fontname, size)
 
 	def load_png(self, name):
 		"""

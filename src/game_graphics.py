@@ -24,6 +24,7 @@ class GameGraphics:
 
 	def __init__(self):
 		self.__SYS = System()
+		self.__PAGER = None
 		self.on_init()
 
 	def on_init(self):
@@ -31,7 +32,6 @@ class GameGraphics:
 
 		self.__SCREEN = self.__SYS.get_screen()
 		self.__GAME_AREA = pygame.Surface(self.__SCREEN.get_size())
-		self.__FONT = self.__SYS.load_font()
 
 		self._setup_tile_map()
 		self._setup_game_tiles()
