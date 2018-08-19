@@ -2,6 +2,9 @@ This is **PyRAMOS**, a dungeon crawling puzzle game. Help King Tut reach the end
 
 The game is developed using Python and PyGame.
 
+![Main Menu](screenshot_00.png)
+![Game Area](screenshot_01.png)
+![End Screen](screenshot_02.png)
 
 ## Requirements
 
@@ -21,27 +24,20 @@ The game is developed using Python and PyGame.
 
 ## How To Play:
 
-- use the arrows to move the adventurer
-- everytime the adventurer moves, he'll see the valid steps around himself. Walls will not be uncovered. Corners can't be seen around.
-- reach the end of the dungeon
-- avoid hitting the walls (aka don't try to move toward one of them) or you'll die of a trap
-
-
-## Dungeon Tiles:
-
-Togheter with the Player tile, there are 4 other tile types:
-
-- wall : don't hit one, or you'll die
-- floor : there you go...
-- start point : a floor tile marked with a green S
-- end point : guess what?
+- you will see a cross-shaped configuration of 5 tiles at the center of your screen
+- the "player" is always in the central tile
+- only the tiles above, below, to the left and to the right of the player will be uncovered
+- every move will change the configuration of the 4 tiles adjacent to the player based on their position on the map
+- only the floor tiles are movable on
+- use the arrow keys to navigate the maps
+- reach the end of each level
+- avoid hitting moving towards a wall / boundary
 
 
 ## To-Do(s):
 
-- rename the game and the adventurer!
+- rename the game!
 - make it stand alone
-- give it a nice ui (Tkinter?)
 - more levels
 - more puzzles
 
