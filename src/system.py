@@ -78,7 +78,7 @@ class System:
 		return wa_spr, p_spr, wlk_spr, s_spr, e_spr
 
 	## utilities functions
-	def load_font(self, size=conf.FONT_SIZE):
+	def load_font(self, size=conf.UiText.GAME_FONT_LARGE):
 		fontname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.FONT_FOLDER, conf.FONT_NAME])
 		return pygame.font.Font(fontname, size)
 

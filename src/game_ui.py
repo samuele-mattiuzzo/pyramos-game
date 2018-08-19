@@ -12,6 +12,9 @@ except ImportError as err:
 
 
 class GameUi:
+	'''
+		Main class for handling in-game overlay and game state screens
+	'''
 
 	def __init__(self):
 		self.__SYS = System()
@@ -33,23 +36,18 @@ class GameUi:
 		self.__SCREEN.fill((0,0,0))
 
 		# game title
-		game_title = "PYRAMOS"
-		self._draw_text(message=game_title, y=-150)
+		self._draw_text(message=conf.UiText.GAME_TITLE, y=-200)
 
 		# new game
-		spacebar = "Press SPACEBAR to start a new game"
-		self._draw_text(message=spacebar, size=25)
+		self._draw_text(message=conf.UiText.GAME_NEW,
+			size=conf.UiText.GAME_FONT_MEDIUM)
 
 		# other options
-		sound_text = "[S]ound on/off"
-		leaderboard_text = "[L]eaderboards"
-		quit_text = "[Q]uit"
+		self._draw_text(message=conf.UiText.GAME_OPTIONS,
+			size=conf.UiText.GAME_FONT_SMALL, y=100)
 
-		options_text = sound_text + leaderboard_text + quit_text
-		self._draw_text(message=options_text, size=18, y=100)
-
-		copy_text = "samumatt@gmail.com | &copy; 2018"
-		self._draw_text(message=copy_text, size=18, y=200)
+		self._draw_text(message=conf.UiText.COPY_TEXT,
+			size=conf.UiText.GAME_FONT_SMALL, y=200)
 
 		self._ui_key_listener()
 
@@ -57,20 +55,15 @@ class GameUi:
 	def end_level_screen(self, player, level):
 		self.__SCREEN.fill((0,0,0))
 
-		level_title = "%s completed" % level.name
-		self._draw_text(message=level_title, y=-150)
+		self._draw_text(message=conf.UiText.LEVEL_COMPLETE % level.name, y=-200)
 
-		score_header = "Score"
-		self._draw_text(message=score_header, size=18)
+		self._draw_text(message=conf.UiText.LEVEL_SCORE_TEXT, size=conf.UiText.GAME_FONT_SMALL)
 
-		moves_text = "Moves: %s" % player.moves
-		deaths_text = "Deaths: %s" % player.deaths
-		self._draw_text(message=moves_text, size=18, y=50)
-		self._draw_text(message=deaths_text, size=18, y=100)
+		self._draw_text(message=conf.UiText.LEVEL_MOVES_TEXT % player.moves, size=conf.UiText.GAME_FONT_SMALL, y=50)
+		self._draw_text(message=conf.UiText.LEVEL_DEATHS_TEXT % player.deaths, size=conf.UiText.GAME_FONT_SMALL, y=100)
 
 		# new game
-		spacebar = "Press SPACEBAR to continue..."
-		self._draw_text(message=spacebar, size=25, y=150)
+		self._draw_text(message=conf.UiText.GAME_CONT, size=conf.UiText.GAME_FONT_MEDIUM, y=150)
 
 		self._ui_key_listener()
 
@@ -80,25 +73,48 @@ class GameUi:
 		scores = player.get_best_scores()
 		beat_levels = len(scores)
 
-		final_message = "YOU BEAT THE GAME" if victory else "YOU WERE DEFEATED"
-		self._draw_text(message=final_message, y=-150)
+		self._draw_text(message=conf.UiText.get_victory_text(victory), y=-200)
 
-		completion_message = "You completed %s stages totalling %s moves and %s deaths" % (
+		stats_end_game = conf.UiText.STATS_END_GAME % (
 			beat_levels, player.moves, player.deaths)
-		self._draw_text(message=completion_message, size=25, y=-125)
+		self._draw_text(message=stats_end_game, size=conf.UiText.GAME_FONT_MEDIUM, y=-150)
 
 		for i in scores:
-			score = "%s: %s - %s steps" % (str(i), str(scores[i][0]), str(scores[i][1]))
-			self._draw_text(message=score, size=18, y=i*18)
+			score = conf.UiText.STATS_PER_LEVEL % (i+1, scores[i][0], scores[i][1])
+			self._draw_text(message=score, size=conf.UiText.GAME_FONT_SMALL, y=i*18)
 
 		# new game
-		spacebar = "Press SPACEBAR return to main menu"
-		self._draw_text(message=spacebar, size=25, y=(len(scores)*18)+25)
+		self._draw_text(message=conf.UiText.GAME_END, size=conf.UiText.GAME_FONT_MEDIUM, y=(len(scores)*18)+25)
 
 		self._ui_key_listener()
 
-	def overlay(self):
-		pass
+	def overlay(self, game, player, level):
+		_default_offset = -25
+
+		# top-left
+		self._draw_text(message=conf.UiText.OVERLAY_LEVEL_TEXT % (level.id+1, level.name),
+			size=conf.UiText.OVERLAY_FONT_SIZE,
+			x=-self.__ORIGIN[0]//2 + _default_offset,
+			y=-self.__ORIGIN[1]//2 + _default_offset*4
+		)
+		# top-left below above
+		self._draw_text(message=conf.UiText.get_overlay_player_best(level.id, player.get_best_scores()),
+			size=conf.UiText.OVERLAY_FONT_SIZE,
+			x=-self.__ORIGIN[0]//2 + _default_offset,
+			y=-self.__ORIGIN[1]//2 + _default_offset*4 + 25
+		)
+		# bottom-left
+		self._draw_text(message=conf.UiText.OVERLAY_PLAYER_STATS % (player.moves, player.deaths),
+			size=conf.UiText.OVERLAY_FONT_SIZE,
+			x=-self.__ORIGIN[0]//2 + _default_offset,
+			y=self.__ORIGIN[1]//2 - _default_offset*4
+		)
+		# bottom-right
+		self._draw_text(message=conf.UiText.OVERLAY_EXPIRED_TIME % "00:00",
+			size=conf.UiText.OVERLAY_FONT_SIZE,
+			x=self.__ORIGIN[0]//2 - _default_offset,
+			y=self.__ORIGIN[1]//2 - _default_offset*4
+		)
 
 	# utilities
 	def _ui_key_listener(self):
@@ -127,7 +143,7 @@ class GameUi:
 		textSurface = font.render(text, True, (255,255,255))
 		return textSurface, textSurface.get_rect()
 
-	def _draw_text(self, message, x=0, y=0, size=conf.FONT_SIZE):
+	def _draw_text(self, message, x=0, y=0, size=conf.UiText.GAME_FONT_LARGE):
 		font = self.__SYS.load_font(size)
 		TextSurf, TextRect = self._text_objects(message, font)
 		TextRect.center = self._get_offset_pos(x, y)

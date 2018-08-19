@@ -72,6 +72,7 @@ class Game:
 			for event in pygame.event.get():
 				self.on_event(event)
 			self.update()
+			self.__ui.overlay(self, self.__player, self.__level)
 
 			#get the current real time
 			T = pygame.time.get_ticks()

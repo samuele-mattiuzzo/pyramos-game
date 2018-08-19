@@ -13,18 +13,11 @@ except ImportError as err:
 
 class GameGraphics:
 	'''
-		Main class for handling GUI and on-screen messages
-		- [X] draw level
-		- [X] update level
-		- [ ] level info
-		- [X] player moves
-		- [X] player deathcounts
-		- [ ] scores and online charts
+		Main class for handling in-game graphics (tiles and player)
 	'''
 
 	def __init__(self):
 		self.__SYS = System()
-		self.__PAGER = None
 		self.on_init()
 
 	def on_init(self):
@@ -80,9 +73,6 @@ class GameGraphics:
 		'''
 		self.update_game(player, level, level.start)
 
-	def display_gui(self, player, level):
-		self.update_gui(player, level, level.start)
-
 	def update_game(self, player, level, new_pos):
 		'''
 			Reset uncovered -> update uncovered
@@ -93,12 +83,6 @@ class GameGraphics:
 
 		self.__SCREEN.blit(self.__SCREEN, (0, 0))
 		pygame.display.flip()
-
-	def update_gui(self, player, level, new_pos):
-		'''
-			Updates messages on the GUI
-		'''
-		pass
 
 	def update_tiles(self, level, new_pos):
 		tiles_copy = self.__GAME_TILES.copy()
