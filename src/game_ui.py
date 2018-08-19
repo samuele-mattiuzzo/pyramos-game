@@ -89,6 +89,7 @@ class GameUi:
 		self._ui_key_listener()
 
 	def overlay(self, game, player, level):
+		self.__ON_UI = False
 		_default_offset = -25
 
 		# top-left
@@ -121,20 +122,17 @@ class GameUi:
 		self.__ON_UI = True
 		while self.__ON_UI:
 			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					pygame.quit()
-					quit()
-
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_SPACE:
 						self.__ON_UI = False
-					if event.key in [pygame.K_q, pygame.K_ESCAPE]:
-						self.__ON_UI = False
+					elif event.key in [pygame.K_q, pygame.K_ESCAPE]:
 						pygame.quit()
-					if event.key == pygame.K_l:
+					elif event.key == pygame.K_l:
 						self.__ON_UI = False
-					if event.key == pygame.K_m:
+					elif event.key == pygame.K_m:
 						self.__ON_UI = False
+					else:
+						continue
 
 			self.__CLOCK.tick(15)
 

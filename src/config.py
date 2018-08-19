@@ -25,7 +25,7 @@ class UiText:
 	OVERLAY_LEVEL_TEXT = "Level %s - %s"
 	OVERLAY_PLAYER_STATS = "Moves: %s | Deaths: %s"
 	OVERLAY_EXPIRED_TIME = "Time: %s"
-	OVERLAY_FONT_SIZE = 18
+	OVERLAY_FONT_SIZE = 20
 
 	@staticmethod
 	def get_victory_text(victory=False):
@@ -54,3 +54,4 @@ FONT_NAME = "VT323-Regular.ttf"
 RESOURCES_FOLDER = "resources"
 TILE_FOLDER = "tilesets"
 FONT_FOLDER = "fonts"
+ICON_PATH = '%s/game_icon.png' % RESOURCES_FOLDER

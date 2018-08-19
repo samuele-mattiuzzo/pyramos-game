@@ -39,6 +39,8 @@ class System:
 			NotYetImplemented: may be done in __init__()?
 		'''
 		video = pygame.display.Info()
+		pygame.display.set_caption(conf.UiText.GAME_TITLE)
+		pygame.display.set_icon(pygame.image.load(conf.ICON_PATH))
 
 	def get_screen(self):
 		'''
@@ -82,12 +84,13 @@ class System:
 		fontname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.FONT_FOLDER, conf.FONT_NAME])
 		return pygame.font.Font(fontname, size)
 
-	def load_png(self, name):
+	def load_png(self, name, mode=None):
 		"""
 			Load image and return image object
 			(utility, slightly modified, from http://www.pygame.org/docs/tut/tom/games3.html - 3.2)
 		"""
-		fullname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.TILE_FOLDER, self.__mode, name])
+		mode = self.__mode if not mode else mode
+		fullname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.TILE_FOLDER, mode, name])
 		try:
 			image = pygame.image.load(fullname)
 			if image.get_alpha() is None:
