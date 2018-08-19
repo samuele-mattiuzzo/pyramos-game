@@ -67,19 +67,18 @@ class GameGraphics:
 			(tile.x, tile.y)
 		)
 
-	def display_game(self, player, level):
+	def display_game(self, level):
 		'''
 			Draws the level for the first time
 		'''
-		self.update_game(player, level, level.start)
+		self.update_game(level, level.start)
 
-	def update_game(self, player, level, new_pos):
+	def update_game(self, level, new_pos):
 		'''
 			Reset uncovered -> update uncovered
 		'''
 		self.__GAME_TILES = self.update_tiles(level, new_pos)
 		self.draw_tiles()
-		player.update_pos(new_pos)
 
 		self.__SCREEN.blit(self.__SCREEN, (0, 0))
 		pygame.display.flip()

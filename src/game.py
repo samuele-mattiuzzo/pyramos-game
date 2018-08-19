@@ -81,6 +81,8 @@ class Game:
 					self._handle_death()
 				else:
 					self._draw_move(tmp_pos)
+					if self.__player.pos != tmp_pos:
+						self.__player.update_pos(tmp_pos)
 					self._handle_move()
 
 	# internal utilities
@@ -131,10 +133,10 @@ class Game:
 		self.__running = False
 
 	def _draw_move(self, pos):
-		self.__g.update_game(self.__player, self.__level, pos)
+		self.__g.update_game(self.__level, pos)
 
 	def _draw_level(self):
-		self.__g.display_game(self.__player, self.__level)
+		self.__g.display_game(self.__level)
 
 	def _handle_move(self):
 		if self._check_end():
