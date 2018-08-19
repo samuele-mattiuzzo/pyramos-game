@@ -2,13 +2,13 @@
 try:
 	import os
 	import pygame
-
-	from resources.levels import LEVELS
-
 	from pygame.locals import *
-	from main_game.level import *
-	from main_game.player import *
-	from main_game.gui import *
+
+	from src.game_stages import LEVELS
+	from src.level import Level
+	from src.player import Player
+	from src.game_graphics import GameGraphics
+
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
@@ -21,7 +21,7 @@ class Game:
 		self.__level_id = level_id
 		self.__player = None
 		self.__level = None
-		self.__GUI = None
+		self.__g = None
 
 		self.__move = None  # used to store the current move
 		self.__running = False  # used to determine if the game is running or not
@@ -30,7 +30,7 @@ class Game:
 		self.__level = Level(self.__level_id)
 		self.__player = Player()
 		self.__player.new_start(self.__level.start)
-		self.__GUI = Graphics()
+		self.__g = GameGraphics()
 
 	def start(self):
 		pass
@@ -141,10 +141,10 @@ class Game:
 		self.__running = False
 
 	def _draw_move(self, pos):
-		self.__GUI.update_game(self.__player, self.__level, pos)
+		self.__g.update_game(self.__player, self.__level, pos)
 
 	def _draw_level(self):
-		self.__GUI.display_game(self.__player, self.__level)
+		self.__g.display_game(self.__player, self.__level)
 
 	def _handle_move(self):
 		if self._check_end():
@@ -189,4 +189,4 @@ class Game:
 
 	@property
 	def gui(self):
-		return self.__GUI
+		return self.__g

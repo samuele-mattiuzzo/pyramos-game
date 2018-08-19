@@ -2,8 +2,10 @@
 try:
 	import os
 	import pygame
-	from resources import config as conf
 	from pygame.locals import *
+
+	from src import config as conf
+
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
@@ -74,7 +76,7 @@ class System:
 
 	## utilities functions
 	def load_font(self):
-		fontname = os.sep.join([os.getcwd(), "resources", conf.FONT_NAME])
+		fontname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.FONT_FOLDER, conf.FONT_NAME])
 
 		return pygame.font.Font(
 			fontname,
@@ -86,7 +88,7 @@ class System:
 			Load image and return image object
 			(utility, slightly modified, from http://www.pygame.org/docs/tut/tom/games3.html - 3.2)
 		"""
-		fullname = os.sep.join([os.getcwd(), "resources", "imgs", self.__mode, name])
+		fullname = os.sep.join([os.getcwd(), conf.RESOURCES_FOLDER, conf.TILE_FOLDER, self.__mode, name])
 		try:
 			image = pygame.image.load(fullname)
 			if image.get_alpha() is None:

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 try:
-
 	# pygame + general imports
 	import pygame, sys, os
 	from pygame.locals import *
 
 	# main game classes imports
-	from main_game.game import *
+	from src.game import Game
 
 except ImportError as err:
 	print("couldn't load module. %s" % (err))

@@ -14,3 +14,8 @@ LEVEL_SIZE = LEVEL_WIDTH, LEVEL_HEIGHT = (10, 10)
 # font name
 FONT_NAME = "VT323-Regular.ttf"
 FONT_SIZE = 50
+
+# folders
+RESOURCES_FOLDER = "resources"
+TILE_FOLDER = "tilesets"
+FONT_FOLDER = "fonts"

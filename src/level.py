@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from resources.levels import *
+from src.game_stages import LEVELS
 
 
 class Level:

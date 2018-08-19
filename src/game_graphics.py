@@ -3,14 +3,15 @@ try:
 	import pygame
 	from pygame.locals import *
 
-	from main_game.system import *
-	from main_game.tile import *
+	from src.system import System
+	from src.tile import Tile
+
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
 
-class Graphics:
+class GameGraphics:
 	'''
 		Main class for handling GUI and on-screen messages
 		- [X] draw level
