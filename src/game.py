@@ -2,6 +2,7 @@
 try:
 	import os
 	import pygame
+	import datetime
 	from pygame.locals import *
 
 	from src.game_stages import LEVELS
@@ -62,13 +63,16 @@ class Game:
 		self.__running = True
 
 		self._draw_level()
+		start_ticks = pygame.time.get_ticks()
 
 		while(self.__running):
 			# main game loop
 			for event in pygame.event.get():
 				self.on_event(event)
 			self.update()
-			self.__ui.overlay(self, self.__player, self.__level)
+			elapsed = (pygame.time.get_ticks()-start_ticks)/1000
+			elapsed = str(datetime.timedelta(seconds=int(elapsed)))
+			self.__ui.overlay(self.__player, self.__level, elapsed)
 
 			self.__CLOCK.tick(60)
 		self.cleanup()

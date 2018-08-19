@@ -101,7 +101,7 @@ class GameUi:
 		pressed_key = self._ui_key_listener()
 		self._handle_ui_pressed_key("end_game", pressed_key)
 
-	def overlay(self, game, player, level):
+	def overlay(self, player, level, elapsed):
 		self.__ON_UI = False
 		_default_offset = -25
 
@@ -125,7 +125,7 @@ class GameUi:
 				y=self.__ORIGIN[1]//2 - _default_offset*4
 			)
 			# bottom-right
-			self._draw_text(message=conf.UiText.OVERLAY_EXPIRED_TIME % "00:00",
+			self._draw_text(message=conf.UiText.OVERLAY_EXPIRED_TIME % elapsed,
 				size=conf.UiText.OVERLAY_FONT_SIZE,
 				x=self.__ORIGIN[0]//2 - _default_offset,
 				y=self.__ORIGIN[1]//2 - _default_offset*4
