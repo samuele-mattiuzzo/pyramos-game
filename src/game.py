@@ -5,11 +5,11 @@ try:
 	import datetime
 	from pygame.locals import *
 
-	from src.game_stages import LEVELS
-	from src.level import Level
-	from src.player import Player
-	from src.game_ui import GameUi
-	from src.game_graphics import GameGraphics
+	from .classes.level import Level
+	from .classes.player import Player
+	from .render.stages import LEVELS
+	from .render.ui import GameUi
+	from .render.engine import GameGraphics
 
 except ImportError as err:
 	print("couldn't load module. %s" % (err))

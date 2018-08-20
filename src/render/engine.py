@@ -3,8 +3,8 @@ try:
 	import pygame
 	from pygame.locals import *
 
-	from src.system import System
-	from src.tile import Tile
+	from ..system import System
+	from ..classes.tile import Tile
 
 except ImportError as err:
 	print("couldn't load module. %s" % (err))

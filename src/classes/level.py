@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from src.game_stages import LEVELS
+from ..render.stages import LEVELS
 
 
 class Level:

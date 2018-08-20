@@ -3,8 +3,8 @@ try:
 	import pygame
 	from pygame.locals import *
 
-	from src import config as conf
-	from src.system import System
+	from .. import config as conf
+	from ..system import System
 
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
