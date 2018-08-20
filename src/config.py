@@ -24,7 +24,7 @@ class UiText:
 	LEVEL_DEATHS_TEXT = "Deaths: %s"
 
 	OVERLAY_LEVEL_TEXT = "Level %s - %s"
-	OVERLAY_PLAYER_STATS = "Moves: %s | Deaths: %s"
+	OVERLAY_PLAYER_STATS = "Moves: %s | Lives: %s"
 	OVERLAY_EXPIRED_TIME = "Time: %s"
 	OVERLAY_FONT_SIZE = 20
 
@@ -33,11 +33,18 @@ class UiText:
 		return "YOU BEAT THE GAME" if victory else "YOU WERE DEFEATED"
 
 	@staticmethod
-	def get_overlay_player_best(level_id, player_best):
-		score = player_best.get(level_id, None)
+	def get_overlay_player_best(level, player):
+		score = player.get_best_scores().get(level.id, None)
 		res = "None" if not score else "%s m | %s d" % (score[0], score[1])
 
 		return "Best: %s" % res
+
+	@classmethod
+	def get_overlay_player_stats(cls, player):
+		lives_deaths = "".join(["[x]" for i in range(player.lives - player.deaths)])
+		lives_deaths += "".join(["[ ]" for i in range(player.deaths)])
+
+		return cls.OVERLAY_PLAYER_STATS % (player.moves, lives_deaths)
 
 # window size
 WINDOW_SIZE = (600, 600)

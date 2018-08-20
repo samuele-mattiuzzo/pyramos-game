@@ -23,7 +23,7 @@ class System:
 	def __init__(self):
 		self.__res = self.__window_width, self.__window_height = conf.WINDOW_SIZE
 		self.__tile_size = self.__tile_width, self.__tile_height = conf.TILE_SIZE
-		self.__mode = "retro"
+		self.__mode = "minimal"
 
 	@property
 	def res(self):

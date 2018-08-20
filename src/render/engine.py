@@ -29,6 +29,10 @@ class GameGraphics:
 		self._setup_tile_map()
 		self._setup_game_tiles()
 
+	def reset(self):
+		self._SCREEN.fill((0, 0, 0))
+		self.__init__()
+
 	def _setup_tile_map(self):
 		(self.__WALL_SPRITE,
 		self.__PLAYER_SPRITE,
@@ -80,9 +84,6 @@ class GameGraphics:
 		self.__GAME_TILES = self.update_tiles(level, new_pos)
 		self.draw_tiles()
 
-		self.__SCREEN.blit(self.__SCREEN, (0, 0))
-		pygame.display.flip()
-
 	def update_tiles(self, level, new_pos):
 		tiles_copy = self.__GAME_TILES.copy()
 		for k in tiles_copy.keys():
@@ -95,6 +96,7 @@ class GameGraphics:
 		for _, tile in self.__GAME_TILES.items():
 			self.draw_tile(tile)
 			self.__SCREEN.blit(self.__GAME_AREA, (0, 0))
+			pygame.display.flip()
 
 	def _get_tile_type(self, level, new_pos, tile_pos):
 		'''

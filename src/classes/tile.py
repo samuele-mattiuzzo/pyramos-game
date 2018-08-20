@@ -9,6 +9,9 @@ class Tile:
 		self.__type = type
 		self.__pos = pos
 
+	def reset(self, pos, x=-1, y=-1, type=0):
+		self.__init__(pos, x, y, type)
+
 	@property
 	def x(self):
 		return self.__x

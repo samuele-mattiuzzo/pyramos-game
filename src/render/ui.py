@@ -34,6 +34,12 @@ class GameUi:
 		self.__OVERLAY = True
 		self.__NEW_GAME = False
 
+	def reset():
+		self.__SCREEN.fill((0, 0, 0))
+		self.__ON_UI = False
+		self.__OVERLAY = True
+		self.__NEW_GAME = False
+
 	@property
 	def overlay(self):
 		return self.__OVERLAY
@@ -105,21 +111,21 @@ class GameUi:
 		self.__ON_UI = False
 		_default_offset = -25
 
-		# top-left
 		if self.__OVERLAY:
+			# top-left
 			self._draw_text(message=conf.UiText.OVERLAY_LEVEL_TEXT % (level.id+1, level.name),
 				size=conf.UiText.OVERLAY_FONT_SIZE,
 				x=-self.__ORIGIN[0]//2 + _default_offset,
 				y=-self.__ORIGIN[1]//2 + _default_offset*4
 			)
 			# top-left below above
-			self._draw_text(message=conf.UiText.get_overlay_player_best(level.id, player.get_best_scores()),
+			self._draw_text(message=conf.UiText.get_overlay_player_best(level, player),
 				size=conf.UiText.OVERLAY_FONT_SIZE,
 				x=-self.__ORIGIN[0]//2 + _default_offset,
 				y=-self.__ORIGIN[1]//2 + _default_offset*4 + 25
 			)
 			# bottom-left
-			self._draw_text(message=conf.UiText.OVERLAY_PLAYER_STATS % (player.moves, player.deaths),
+			self._draw_text(message=conf.UiText.get_overlay_player_stats(player),
 				size=conf.UiText.OVERLAY_FONT_SIZE,
 				x=-self.__ORIGIN[0]//2 + _default_offset,
 				y=self.__ORIGIN[1]//2 - _default_offset*4
@@ -131,6 +137,10 @@ class GameUi:
 				y=self.__ORIGIN[1]//2 - _default_offset*4
 			)
 
+			self.__SCREEN.blit(self.__SCREEN, (0, 0))
+			pygame.display.update()
+
+
 	# utilities
 	def _ui_key_listener(self):
 		self.__ON_UI = True
@@ -141,6 +151,7 @@ class GameUi:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
+					break
 
 				if event.type == pygame.KEYDOWN:
 					if event.key in valid_event_keys:
@@ -148,6 +159,7 @@ class GameUi:
 						retval = event.key
 					else:
 						continue
+					break
 
 			self.__CLOCK.tick(15)
 		return retval
@@ -163,6 +175,7 @@ class GameUi:
 		elif key in [pygame.K_q, pygame.K_ESCAPE]:
 			self.__ON_UI = False
 			self.__OVERLAY = False
+			self.__NEW_GAME = False
 			pygame.quit()
 		else:
 			pass

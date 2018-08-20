@@ -14,6 +14,9 @@ class Level:
 		self.__completion = LEVELS[id]['top_score']
 		self.__size = LEVELS[id]['size']
 
+	def reset(self):
+		self.__init__()
+
 	@property
 	def id(self):
 		return self.__id

@@ -37,10 +37,23 @@ class Game:
 		self.__ui = GameUi()
 		self.__CLOCK = pygame.time.Clock()
 
-	def new_game(self):
-		self.init()
+	def reset(self):
+		self.__move = None
+		self.__g.reset()
+		self.__ui.reset()
+		self.__level = Level(self.__level_id)
+		self.__player.reset()
+		self.__player.new_start(self.__level.start)
+		self.__CLOCK = pygame.time.Clock()
+
+	def new_game(self, reset=False):
+		if reset:
+			self.reset()
+		else:
+			self.init()
 		self.__ui.start_screen()
-		self.execute()
+		if not reset:
+			self.execute()
 
 	def end(self):
 		pass
@@ -69,6 +82,7 @@ class Game:
 			# main game loop
 			for event in pygame.event.get():
 				self.on_event(event)
+				break
 			self.update()
 			elapsed = (pygame.time.get_ticks()-start_ticks)/1000
 			elapsed = str(datetime.timedelta(seconds=int(elapsed)))
@@ -82,7 +96,11 @@ class Game:
 			valid, tmp_pos, fluke = self.__move
 			if not fluke:
 				if not valid:
-					self._handle_death()
+					if self.__player.is_dead:
+						self._handle_death()
+					else:
+						self.__player.add_death()
+						self.__player.update_pos(self.__level.start)
 				else:
 					self._draw_move(tmp_pos)
 					if self.__player.pos != tmp_pos:
@@ -91,32 +109,28 @@ class Game:
 
 	# internal utilities
 	def _new_valid_pos(self, key_pressed):
-		valid = False
 		fluke = False
 		pos = x, y = self.__player.pos
 
 		if key_pressed == pygame.K_LEFT and y>0:
 			if self.__level.design[x][y-1] != 0:
 				pos = (x, y-1)
-				valid = True
 
-		elif key_pressed == pygame.K_RIGHT and y<9:
+		elif key_pressed == pygame.K_RIGHT and y<self.__level.size[1]-1:
 			if self.__level.design[x][y+1] != 0:
 				pos = (x, y+1)
-				valid = True
 
 		elif key_pressed == pygame.K_UP and x>0:
 			if self.__level.design[x-1][y] != 0:
 				pos = (x-1, y)
-				valid = True
 
-		elif key_pressed == pygame.K_DOWN and x<9:
+		elif key_pressed == pygame.K_DOWN and x<self.__level.size[0]-1:
 			if self.__level.design[x+1][y] != 0:
 				pos = (x+1, y)
-				valid = True
 		else:
 			fluke = True
 
+		valid = (pos != self.__player.pos)
 		return valid, pos, fluke
 
 	def _next_level(self):

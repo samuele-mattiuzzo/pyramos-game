@@ -8,10 +8,15 @@ class Player:
 		self.__pos = (0, 0)
 		self.__moves = 0
 		self.__deaths = 0
+		self.__lives = 1
 		self.__best = {}
+
+	def reset(self):
+		self.__init__()
 
 	def new_start(self, pos):
 		self.__pos = pos
+		self.__moves = 0
 
 	def update_pos(self, np):
 		self.__pos = np
@@ -23,6 +28,10 @@ class Player:
 	def add_death(self):
 		self.__deaths += 1
 
+	@property
+	def is_dead(self):
+		return self.__deaths == self.__lives
+
 	def update_best_score(self, id, name, new_score):
 		write_score = (name, new_score)
 
@@ -31,9 +40,7 @@ class Player:
 				new_score if new_score < self.__best[id][1] else self.__best[id][1]
 			)
 
-		self.__best.update({
-			id: (name, new_score)
-		})
+		self.__best.update({id: (name, new_score)})
 
 	def get_best_scores(self):
 		return self.__best
@@ -54,3 +61,7 @@ class Player:
 	@property
 	def deaths(self):
 		return self.__deaths
+
+	@property
+	def lives(self):
+		return self.__lives
