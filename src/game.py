@@ -37,23 +37,25 @@ class Game:
 		self.__ui = GameUi()
 		self.__CLOCK = pygame.time.Clock()
 
+	def new_game(self):
+		self.init()
+		self.__ui.start_screen()
+		self.execute()
+
 	def reset(self):
+		self.__level_id = 0
 		self.__move = None
-		self.__g.reset()
-		self.__ui.reset()
+
 		self.__level = Level(self.__level_id)
 		self.__player.reset()
 		self.__player.new_start(self.__level.start)
-		self.__CLOCK = pygame.time.Clock()
 
-	def new_game(self, reset=False):
-		if reset:
-			self.reset()
-		else:
-			self.init()
-		self.__ui.start_screen()
-		if not reset:
-			self.execute()
+		self.__g.reset()
+		self.__ui.reset()
+
+		self._draw_level()
+
+		self.__CLOCK = pygame.time.Clock()
 
 	def end(self):
 		pass
@@ -61,16 +63,17 @@ class Game:
 	def on_event(self, event):
 		if event.type == pygame.QUIT:
 			self.cleanup()
+			pygame.quit()
 
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_ESCAPE:
 				self.cleanup()
+				pygame.quit()
 			else:
 				self.__move = self._new_valid_pos(event.key)
 
 	def cleanup(self):
 		self.__running = False
-		pygame.quit()
 
 	def execute(self):
 		self.__running = True
@@ -89,7 +92,6 @@ class Game:
 			self.__ui.overlay(self.__player, self.__level, elapsed)
 
 			self.__CLOCK.tick(60)
-		self.cleanup()
 
 	def update(self):
 		if self.__move:
@@ -181,7 +183,7 @@ class Game:
 		self.__ui.end_game_screen(self.__player, victory)
 
 		if self.__ui.new_game:
-			self.new_game()
+			self.reset()
 
 	# getters
 	@property

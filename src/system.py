@@ -76,8 +76,10 @@ class System:
 		wlk_spr = self.load_png("tile_walk.png")
 		s_spr = self.load_png("tile_start.png")
 		e_spr = self.load_png("tile_end.png")
+		s_p_spr = self.load_png("tile_start_player.png")
+		e_p_spr = self.load_png("tile_end_player.png")
 
-		return wa_spr, p_spr, wlk_spr, s_spr, e_spr
+		return wa_spr, p_spr, wlk_spr, s_spr, s_p_spr, e_spr, e_p_spr
 
 	## utilities functions
 	def load_font(self, size=conf.UiText.GAME_FONT_LARGE):

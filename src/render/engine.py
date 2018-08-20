@@ -30,21 +30,25 @@ class GameGraphics:
 		self._setup_game_tiles()
 
 	def reset(self):
-		self._SCREEN.fill((0, 0, 0))
-		self.__init__()
+		self.__SCREEN.fill((0, 0, 0))
+		self._setup_game_tiles()
 
 	def _setup_tile_map(self):
 		(self.__WALL_SPRITE,
 		self.__PLAYER_SPRITE,
 		self.__WALK_SPRITE,
 		self.__START_SPRITE,
-		self.__END_SPRITE) = self.__SYS.load_images()
+		self.__START_PLAYER_SPRITE,
+		self.__END_SPRITE,
+		self.__END_PLAYER_SPRITE) = self.__SYS.load_images()
 
 		self.__TILE_MAP = {
 			0: self.__WALL_SPRITE,
 			1: self.__WALK_SPRITE,
 			2: self.__START_SPRITE,
+			22: self.__START_PLAYER_SPRITE,
 			3: self.__END_SPRITE,
+			33: self.__END_PLAYER_SPRITE,
 			5: self.__PLAYER_SPRITE
 		}
 
@@ -126,6 +130,11 @@ class GameGraphics:
 				new_type = level.design[x][y]
 
 		elif tile_pos == "player":
-			return 5
+			if new_pos == level.start:
+				return 22
+			elif new_pos == level.end:
+				return 33
+			else:
+				return 5
 
 		return new_type

@@ -34,7 +34,7 @@ class GameUi:
 		self.__OVERLAY = True
 		self.__NEW_GAME = False
 
-	def reset():
+	def reset(self):
 		self.__SCREEN.fill((0, 0, 0))
 		self.__ON_UI = False
 		self.__OVERLAY = True

@@ -15,7 +15,7 @@ class Level:
 		self.__size = LEVELS[id]['size']
 
 	def reset(self):
-		self.__init__()
+		self.__init__(0)
 
 	@property
 	def id(self):
