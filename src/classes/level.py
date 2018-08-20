@@ -12,6 +12,7 @@ class Level:
 		self.__end = LEVELS[id]['end']
 		self.__music = LEVELS[id]['background_music']
 		self.__completion = LEVELS[id]['top_score']
+		self.__size = LEVELS[id]['size']
 
 	@property
 	def id(self):
@@ -40,3 +41,7 @@ class Level:
 	@property
 	def completion(self):
 		return self.__completion
+
+	@property
+	def size(self):
+		return self.__size

@@ -35,6 +35,7 @@ LEVELS = [
 
 	"background_music" : "",
 	"top_score" : 18,
+	"size": (10, 10),
 
 },
 
@@ -62,6 +63,7 @@ LEVELS = [
 
 	"background_music" : "",
 	"top_score" : 18,
+	"size": (10, 10),
 
 },
 

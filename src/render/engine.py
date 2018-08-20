@@ -110,12 +110,12 @@ class GameGraphics:
 
 		elif tile_pos == "bottom":
 			x, y = (new_pos[0]+1, new_pos[1])
-			if x < 10:
+			if x < level.size[0]:
 				new_type = level.design[x][y]
 
 		elif tile_pos == "right":
 			x, y = (new_pos[0], new_pos[1]+1)
-			if y < 10:
+			if y < level.size[1]:
 				new_type = level.design[x][y]
 
 		elif tile_pos == "left":

@@ -5,8 +5,8 @@ try:
 	import datetime
 	from pygame.locals import *
 
-	from .classes.level import Level
 	from .classes.player import Player
+	from .classes.level import Level
 	from .render.stages import LEVELS
 	from .render.ui import GameUi
 	from .render.engine import GameGraphics
