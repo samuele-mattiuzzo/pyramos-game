@@ -7,19 +7,21 @@ try:
 
 	from .classes.player import Player
 	from .classes.level import Level
-	from .render.stages import LEVELS
-	from .render.ui import GameUi
-	from .render.engine import GameGraphics
+	from .engine.controller import ControllerMixin
+	from .engine.stages import LEVELS
+	from .engine.ui import GameUi
+	from .engine.game_graphics import GameGraphics
 
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
 	sys.exit(2)
 
 
-class Game:
+class Game(ControllerMixin):
 
 	def __init__(self, level_id=0):
 		# the Game class' attributes are all private
+		super(Game, self).__init__()
 		self.__level_id = level_id
 		self.__player = None
 		self.__level = None
@@ -63,35 +65,58 @@ class Game:
 	def on_event(self, event):
 		if event.type == pygame.QUIT:
 			self.cleanup()
-			pygame.quit()
 
 		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_ESCAPE:
+			if event.key in [pygame.K_ESCAPE]:
 				self.cleanup()
 				pygame.quit()
 			else:
-				self.__move = self._new_valid_pos(event.key)
+				self.handle_input(
+					self.__ui.ui_screen,
+					event.key
+				)
+
+	def _handle_ui_input(self, ui_screen=None, input=None):
+		if input == pygame.K_SPACE:
+			if ui_screen in ["start", "end_level"]:
+				pass
+			elif ui_screen in ["end_game", "defeat"]:
+				self.__ui.cleanup()
+
+		elif input in [pygame.K_q, pygame.K_ESCAPE]:
+			self.cleanup()
+			pygame.quit()
+		else:
+			pass
+
+	def _handle_game_input(self, input=None):
+		self.__move = self._new_valid_pos(input)
 
 	def cleanup(self):
+		self.__ui.cleanup()
+		self.__g.cleanup()
 		self.__running = False
 
 	def execute(self):
 		self.__running = True
-
 		self._draw_level()
+
 		start_ticks = pygame.time.get_ticks()
 
 		while(self.__running):
 			# main game loop
+
+			self.__ui.overlay(
+				self.__player, self.__level,
+				self._elapsed_time(start_ticks)
+			)
+
 			for event in pygame.event.get():
 				self.on_event(event)
-				break
 			self.update()
-			elapsed = (pygame.time.get_ticks()-start_ticks)/1000
-			elapsed = str(datetime.timedelta(seconds=int(elapsed)))
-			self.__ui.overlay(self.__player, self.__level, elapsed)
 
 			self.__CLOCK.tick(60)
+		self.cleanup()
 
 	def update(self):
 		if self.__move:
@@ -150,13 +175,12 @@ class Game:
 
 	def _handle_death(self):
 		self._handle_end_game()
-		self.__running = False
 
 	def _draw_move(self, pos):
 		self.__g.update_game(self.__level, pos)
 
 	def _draw_level(self):
-		self.__g.display_game(self.__level)
+		self.__g.update_game(self.__level, self.__level.start)
 
 	def _handle_move(self):
 		if self._check_end():
@@ -182,8 +206,9 @@ class Game:
 		)
 		self.__ui.end_game_screen(self.__player, victory)
 
-		if self.__ui.new_game:
-			self.reset()
+	def _elapsed_time(self, ticks):
+		elapsed = (pygame.time.get_ticks()-ticks)/1000
+		return str(datetime.timedelta(seconds=int(elapsed)))
 
 	# getters
 	@property

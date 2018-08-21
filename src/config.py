@@ -6,16 +6,16 @@ class UiText:
 	GAME_TITLE = "Pyramos"
 	COPY_TEXT = "samumatt@gmail.com | &copy; 2018"
 
-	GAME_NEW = "Press SPACEBAR to start a new game"
-	GAME_CONT = "Press SPACEBAR to continue..."
-	GAME_END = "Press SPACEBAR to return to menu"
+	GAME_NEW = "SPACEBAR: New game"
+	GAME_CONT = "SPACEBAR: Continue"
+	GAME_END = "SPACEBAR: New game"
 	GAME_OPTIONS = "[H]elp	[S]ound on/off	[L]eaderboards	[Q]uit"
 
 	GAME_FONT_LARGE = 50
 	GAME_FONT_MEDIUM = 25
 	GAME_FONT_SMALL = 18
 
-	STATS_END_GAME = "You completed %s stages totalling %s moves and %s deaths"
+	STATS_END_GAME = "You completed %s stages in %s moves and %s deaths"
 	STATS_PER_LEVEL = "%s: %s - %s steps"
 
 	LEVEL_COMPLETE = "%s completed"
@@ -51,6 +51,9 @@ WINDOW_SIZE = (600, 600)
 
 # size of each tile
 TILE_SIZE = TILE_HEIGHT, TILE_WIDTH = (96, 96)
+
+# default game mode
+DEFAULT_MODE = "minimal"
 
 # font name
 FONT_NAME = "VT323-Regular.ttf"

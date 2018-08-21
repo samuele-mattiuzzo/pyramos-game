@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ..render.stages import LEVELS
+from ..engine.stages import LEVELS
 
 
 class Level:

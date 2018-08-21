@@ -24,7 +24,8 @@ class GameGraphics:
 		self.__SYS.get_properties()
 
 		self.__SCREEN = self.__SYS.get_screen()
-		self.__GAME_AREA = pygame.Surface(self.__SCREEN.get_size())
+		self.__GAME_AREA = self.__SYS.get_surface()
+		self.__in_game = False
 
 		self._setup_tile_map()
 		self._setup_game_tiles()
@@ -32,6 +33,14 @@ class GameGraphics:
 	def reset(self):
 		self.__SCREEN.fill((0, 0, 0))
 		self._setup_game_tiles()
+
+	def cleanup(self):
+		self.__in_game = False
+		self.__TILE_MAP = None
+		self.__GAME_TILES = None
+
+	def toggle(self):
+		self.__in_game = not self.__in_game
 
 	def _setup_tile_map(self):
 		(self.__WALL_SPRITE,
@@ -53,7 +62,6 @@ class GameGraphics:
 		}
 
 	def _setup_game_tiles(self):
-
 		origin = self.__SYS.get_screen_origin()
 		offset_x, offset_y = self.__SYS.tile_size
 
@@ -79,14 +87,16 @@ class GameGraphics:
 		'''
 			Draws the level for the first time
 		'''
-		self.update_game(level, level.start)
+		if self.__in_game:
+			self.update_game(level, level.start)
 
 	def update_game(self, level, new_pos):
 		'''
 			Reset uncovered -> update uncovered
 		'''
-		self.__GAME_TILES = self.update_tiles(level, new_pos)
-		self.draw_tiles()
+		if self.__in_game:
+			self.__GAME_TILES = self.update_tiles(level, new_pos)
+			self.draw_tiles()
 
 	def update_tiles(self, level, new_pos):
 		tiles_copy = self.__GAME_TILES.copy()
@@ -97,10 +107,11 @@ class GameGraphics:
 		return tiles_copy
 
 	def draw_tiles(self):
-		for _, tile in self.__GAME_TILES.items():
-			self.draw_tile(tile)
-			self.__SCREEN.blit(self.__GAME_AREA, (0, 0))
-			pygame.display.flip()
+		if self.__in_game:
+			for _, tile in self.__GAME_TILES.items():
+				self.draw_tile(tile)
+				self.__SCREEN.blit(self.__GAME_AREA, (0, 0))
+				pygame.display.flip()
 
 	def _get_tile_type(self, level, new_pos, tile_pos):
 		'''

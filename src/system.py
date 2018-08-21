@@ -23,7 +23,7 @@ class System:
 	def __init__(self):
 		self.__res = self.__window_width, self.__window_height = conf.WINDOW_SIZE
 		self.__tile_size = self.__tile_width, self.__tile_height = conf.TILE_SIZE
-		self.__mode = "minimal"
+		self.__mode = conf.DEFAULT_MODE
 
 	@property
 	def res(self):
@@ -48,6 +48,9 @@ class System:
 		'''
 		return pygame.display.set_mode(
 			self.__res)
+
+	def get_surface(self):
+		return pygame.Surface(self.get_screen().get_size())
 
 	def get_screen_origin(self):
 		return (

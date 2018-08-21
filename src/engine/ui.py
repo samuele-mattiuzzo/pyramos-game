@@ -25,31 +25,50 @@ class GameUi:
 		self.__SYS.get_properties()
 
 		self.__SCREEN = self.__SYS.get_screen()
-		self.__GAME_AREA = pygame.Surface(self.__SCREEN.get_size())
 		self.__ORIGIN = self.__SYS.get_screen_origin_no_offset()
 
-		self.__ON_UI = False
 		self.__CLOCK = pygame.time.Clock()
 
-		self.__OVERLAY = True
-		self.__NEW_GAME = False
+		self.__in_ui = False
+		self.__ui_screen = None
+		self.__show_overlay = False
 
 	def reset(self):
 		self.__SCREEN.fill((0, 0, 0))
-		self.__ON_UI = False
-		self.__OVERLAY = True
-		self.__NEW_GAME = False
+		self.__show_overlay = False
+		self.__in_ui = False
+
+	def cleanup(self):
+		self.__ui_screen = None
+		self.__show_overlay = False
+		self.__in_ui = False
 
 	@property
-	def overlay(self):
-		return self.__OVERLAY
+	def in_ui(self):
+		return self.__in_ui
+
+	def toggle_overlay(self):
+		self.__show_overlay = not self.__show_overlay
+
+	def toggle(self):
+		self.__in_ui = not self.__in_ui
 
 	@property
-	def new_game(self):
-		return self.__NEW_GAME
+	def ui_screen(self):
+		return self.__ui_screen
+
+	def _game_footer(self):
+		# other options
+		self._draw_text(message=conf.UiText.GAME_OPTIONS,
+			size=conf.UiText.GAME_FONT_SMALL, y=100)
+
+		self._draw_text(message=conf.UiText.COPY_TEXT,
+			size=conf.UiText.GAME_FONT_SMALL, y=200)
 
 	def start_screen(self):
 		self.__SCREEN.fill((0,0,0))
+		self.__ui_screen = "start"
+		self.__in_ui = True
 
 		# game title
 		self._draw_text(message=conf.UiText.GAME_TITLE, y=-200)
@@ -58,19 +77,13 @@ class GameUi:
 		self._draw_text(message=conf.UiText.GAME_NEW,
 			size=conf.UiText.GAME_FONT_MEDIUM)
 
-		# other options
-		self._draw_text(message=conf.UiText.GAME_OPTIONS,
-			size=conf.UiText.GAME_FONT_SMALL, y=100)
-
-		self._draw_text(message=conf.UiText.COPY_TEXT,
-			size=conf.UiText.GAME_FONT_SMALL, y=200)
-
-		pressed_key = self._ui_key_listener()
-		self._handle_ui_pressed_key("start", pressed_key)
+		self._game_footer()
 
 
 	def end_level_screen(self, player, level):
 		self.__SCREEN.fill((0,0,0))
+		self.__ui_screen = "end_level"
+		self.__in_ui = True
 
 		self._draw_text(message=conf.UiText.LEVEL_COMPLETE % level.name, y=-200)
 
@@ -79,14 +92,15 @@ class GameUi:
 		self._draw_text(message=conf.UiText.LEVEL_MOVES_TEXT % player.moves, size=conf.UiText.GAME_FONT_SMALL, y=50)
 		self._draw_text(message=conf.UiText.LEVEL_DEATHS_TEXT % player.deaths, size=conf.UiText.GAME_FONT_SMALL, y=100)
 
-		# new game
+		# next level
 		self._draw_text(message=conf.UiText.GAME_CONT, size=conf.UiText.GAME_FONT_MEDIUM, y=150)
 
-		pressed_key = self._ui_key_listener()
-		self._handle_ui_pressed_key("end_level", pressed_key)
+
 
 	def end_game_screen(self, player, victory=False):
 		self.__SCREEN.fill((0,0,0))
+		self.__ui_screen = "end_game" if victory else "defeat"
+		self.__in_ui = True
 
 		scores = player.get_best_scores()
 		beat_levels = len(scores)
@@ -104,14 +118,13 @@ class GameUi:
 		# new game
 		self._draw_text(message=conf.UiText.GAME_END, size=conf.UiText.GAME_FONT_MEDIUM, y=(len(scores)*18)+25)
 
-		pressed_key = self._ui_key_listener()
-		self._handle_ui_pressed_key("end_game", pressed_key)
 
 	def overlay(self, player, level, elapsed):
-		self.__ON_UI = False
+		self.__in_ui = False
+		self.__ui_screen = None
 		_default_offset = -25
 
-		if self.__OVERLAY:
+		if self.__show_overlay:
 			# top-left
 			self._draw_text(message=conf.UiText.OVERLAY_LEVEL_TEXT % (level.id+1, level.name),
 				size=conf.UiText.OVERLAY_FONT_SIZE,
@@ -143,19 +156,20 @@ class GameUi:
 
 	# utilities
 	def _ui_key_listener(self):
-		self.__ON_UI = True
+		self.__show_overlay = True
 		valid_event_keys = [pygame.K_SPACE, pygame.K_q, pygame.K_ESCAPE, pygame.K_l, pygame.K_m]
 		retval = None
 
-		while self.__ON_UI:
+		while self.__show_overlay:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
+					self.cleanup()
 					pygame.quit()
 					break
 
 				if event.type == pygame.KEYDOWN:
 					if event.key in valid_event_keys:
-						self.__ON_UI = False
+						self.__show_overlay = False
 						retval = event.key
 					else:
 						continue
@@ -168,14 +182,11 @@ class GameUi:
 		if key == pygame.K_SPACE:
 			if screen in ["start", "end_level"]:
 				pass
-			elif screen == "end_game":
-				self.__ON_UI = False
-				self.__OVERLAY = False
+			elif screen in ["end_game", "defeat"]:
+				self.cleanup()
 				self.__NEW_GAME = True
 		elif key in [pygame.K_q, pygame.K_ESCAPE]:
-			self.__ON_UI = False
-			self.__OVERLAY = False
-			self.__NEW_GAME = False
+			self.cleanup()
 			pygame.quit()
 		else:
 			pass
