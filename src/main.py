@@ -5,7 +5,7 @@ try:
 	from pygame.locals import *
 
 	# main game classes imports
-	from src.game import Game
+	from .game import Game
 
 except ImportError as err:
 	print("couldn't load module. %s" % (err))
@@ -17,5 +17,5 @@ pygame.init()
 
 
 if __name__ == "__main__":
-	game = Game()
-	game.new_game()
+	g = Game()
+	g.new_game()
