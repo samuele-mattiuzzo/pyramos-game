@@ -8,7 +8,7 @@ class UiText:
 
 	GAME_NEW = "Press SPACEBAR to start a new game"
 	GAME_CONT = "Press SPACEBAR to continue..."
-	GAME_END = "Press SPACEBAR to return to menu"
+	GAME_END = "Press SPACEBAR to return to main menu"
 	GAME_OPTIONS = "[H]elp	[S]ound on/off	[L]eaderboards	[Q]uit"
 
 	GAME_FONT_LARGE = 50

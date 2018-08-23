@@ -48,8 +48,13 @@ class GameUi:
 	def new_game(self):
 		return self.__NEW_GAME
 
+	@property
+	def quit_game(self):
+		return not self.__NEW_GAME and not self.__ON_UI and not self.__OVERLAY
+
 	def start_screen(self):
 		self.__SCREEN.fill((0,0,0))
+		self.__ON_UI = True
 
 		# game title
 		self._draw_text(message=conf.UiText.GAME_TITLE, y=-200)
@@ -71,6 +76,7 @@ class GameUi:
 
 	def end_level_screen(self, player, level):
 		self.__SCREEN.fill((0,0,0))
+		self.__ON_UI = True
 
 		self._draw_text(message=conf.UiText.LEVEL_COMPLETE % level.name, y=-200)
 
@@ -87,6 +93,7 @@ class GameUi:
 
 	def end_game_screen(self, player, victory=False):
 		self.__SCREEN.fill((0,0,0))
+		self.__ON_UI = True
 
 		scores = player.get_best_scores()
 		beat_levels = len(scores)
@@ -151,7 +158,6 @@ class GameUi:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
-					break
 
 				if event.type == pygame.KEYDOWN:
 					if event.key in valid_event_keys:
@@ -166,8 +172,12 @@ class GameUi:
 
 	def _handle_ui_pressed_key(self, screen, key):
 		if key == pygame.K_SPACE:
-			if screen in ["start", "end_level"]:
-				pass
+			if screen == "start":
+				self.__ON_UI = False
+				self.__NEW_GAME = True
+			elif screen == "end_level":
+				self.__ON_UI = False
+				self.__NEW_GAME = False
 			elif screen == "end_game":
 				self.__ON_UI = False
 				self.__OVERLAY = False
@@ -176,7 +186,6 @@ class GameUi:
 			self.__ON_UI = False
 			self.__OVERLAY = False
 			self.__NEW_GAME = False
-			pygame.quit()
 		else:
 			pass
 

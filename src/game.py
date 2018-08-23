@@ -35,12 +35,16 @@ class Game:
 		self.__player.new_start(self.__level.start)
 		self.__g = GameGraphics()
 		self.__ui = GameUi()
-		self.__CLOCK = pygame.time.Clock()
+		self.__CLOCK = None
 
 	def new_game(self):
 		self.init()
 		self.__ui.start_screen()
-		self.execute()
+		if self.__ui.new_game:
+			self.execute()
+		elif self.__ui.quit_game:
+			self.cleanup()
+			pygame.quit()
 
 	def reset(self):
 		self.__level_id = 0
@@ -53,30 +57,19 @@ class Game:
 		self.__g.reset()
 		self.__ui.reset()
 
-		self._draw_level()
-
-		self.__CLOCK = pygame.time.Clock()
-
 	def end(self):
 		pass
 
 	def on_event(self, event):
-		if event.type == pygame.QUIT:
-			self.cleanup()
-			pygame.quit()
-
 		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_ESCAPE:
-				self.cleanup()
-				pygame.quit()
-			else:
-				self.__move = self._new_valid_pos(event.key)
+			self.__move = self._new_valid_pos(event.key)
 
 	def cleanup(self):
 		self.__running = False
 
 	def execute(self):
 		self.__running = True
+		self.__CLOCK = pygame.time.Clock()
 
 		self._draw_level()
 		start_ticks = pygame.time.get_ticks()
@@ -85,8 +78,8 @@ class Game:
 			# main game loop
 			for event in pygame.event.get():
 				self.on_event(event)
-				break
 			self.update()
+
 			elapsed = (pygame.time.get_ticks()-start_ticks)/1000
 			elapsed = str(datetime.timedelta(seconds=int(elapsed)))
 			self.__ui.overlay(self.__player, self.__level, elapsed)
@@ -148,10 +141,6 @@ class Game:
 	def _check_has_more_levels(self):
 		return self.level_id + 1 < len(LEVELS)
 
-	def _handle_death(self):
-		self._handle_end_game()
-		self.__running = False
-
 	def _draw_move(self, pos):
 		self.__g.update_game(self.__level, pos)
 
@@ -165,6 +154,9 @@ class Game:
 				self._next_level()
 			else:
 				self._handle_end_game(victory=True)
+
+	def _handle_death(self):
+		self._handle_end_game()
 
 	def _handle_end_level(self):
 		self.__player.update_best_score(
@@ -184,6 +176,11 @@ class Game:
 
 		if self.__ui.new_game:
 			self.reset()
+			self.new_game()
+
+		elif self.__ui.quit_game:
+			self.cleanup()
+			pygame.quit()
 
 	# getters
 	@property
