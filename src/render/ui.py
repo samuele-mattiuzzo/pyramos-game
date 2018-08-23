@@ -182,6 +182,12 @@ class GameUi:
 				self.__ON_UI = False
 				self.__OVERLAY = False
 				self.__NEW_GAME = True
+		elif key == pygame.K_l:
+			pass
+		elif key == pygame.K_h:
+			pass
+		elif key == pygame.K_s:
+			pass
 		elif key in [pygame.K_q, pygame.K_ESCAPE]:
 			self.__ON_UI = False
 			self.__OVERLAY = False
