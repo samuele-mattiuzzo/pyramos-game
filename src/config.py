@@ -11,6 +11,16 @@ class UiText:
 	GAME_END = "Press SPACEBAR to return to main menu"
 	GAME_OPTIONS = "[H]elp	[S]ound on/off	[L]eaderboards	[Q]uit"
 
+	SUBMENU_HELP_TITLE = "[H]ELP"
+	SUBMENU_LEADERBOARD_TITLE = "[L]EADERBOARD"
+	SUBMENU_HELP_TEXT = """
+		Press the arrow keys
+		Don't hit the walls
+		Don't die
+	"""
+	SUBMENU_PLACEHOLDER = "Coming Soon"
+	SUBMENU_BACK = "<- [B]ack to main menu"
+
 	GAME_FONT_LARGE = 50
 	GAME_FONT_MEDIUM = 25
 	GAME_FONT_SMALL = 18

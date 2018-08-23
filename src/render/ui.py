@@ -73,6 +73,41 @@ class GameUi:
 		pressed_key = self._ui_key_listener()
 		self._handle_ui_pressed_key("start", pressed_key)
 
+	def leaderboard_screen(self):
+		self.__SCREEN.fill((0,0,0))
+		self.__ON_UI = True
+
+		# game title
+		self._draw_text(message=conf.UiText.SUBMENU_LEADERBOARD_TITLE, y=-200)
+
+		# new game
+		self._draw_text(message=conf.UiText.SUBMENU_PLACEHOLDER,
+			size=conf.UiText.GAME_FONT_MEDIUM)
+
+		# other options
+		self._draw_text(message=conf.UiText.SUBMENU_BACK,
+			size=conf.UiText.GAME_FONT_SMALL, y=100)
+
+		pressed_key = self._ui_key_listener()
+		self._handle_ui_pressed_key("submenu", pressed_key)
+
+	def help_screen(self):
+		self.__SCREEN.fill((0,0,0))
+		self.__ON_UI = True
+
+		# game title
+		self._draw_text(message=conf.UiText.SUBMENU_HELP_TITLE, y=-200)
+
+		# new game
+		self._draw_text(message=conf.UiText.SUBMENU_HELP_TEXT,
+			size=conf.UiText.GAME_FONT_MEDIUM)
+
+		# other options
+		self._draw_text(message=conf.UiText.SUBMENU_BACK,
+			size=conf.UiText.GAME_FONT_SMALL, y=100)
+
+		pressed_key = self._ui_key_listener()
+		self._handle_ui_pressed_key("submenu", pressed_key)
 
 	def end_level_screen(self, player, level):
 		self.__SCREEN.fill((0,0,0))
@@ -171,23 +206,30 @@ class GameUi:
 		return retval
 
 	def _handle_ui_pressed_key(self, screen, key):
-		if key == pygame.K_SPACE:
-			if screen == "start":
+
+		if key == pygame.K_SPACE:  # space is the main actor, that sets the ui up for the main Game
+			if screen in ["start", "end_game"]:  # starts a new game
 				self.__ON_UI = False
 				self.__NEW_GAME = True
-			elif screen == "end_level":
+			if screen == "end_level":  # proceeds to the next level
 				self.__ON_UI = False
 				self.__NEW_GAME = False
-			elif screen == "end_game":
-				self.__ON_UI = False
-				self.__OVERLAY = False
-				self.__NEW_GAME = True
-		elif key == pygame.K_l:
-			pass
-		elif key == pygame.K_h:
-			pass
-		elif key == pygame.K_s:
-			pass
+
+		elif screen in ["start", "end_game"]:
+				if key == pygame.K_l:  # leaderboard
+					self.__ON_UI = False
+					self.leaderboard_screen()
+				if key == pygame.K_h:  # help screen
+					self.__ON_UI = False
+					self.help_screen()
+				#elif key == pygame.K_s:  # toggle sound
+				#	self.toggle_sound()
+
+		elif key == pygame.K_b and screen == "submenu":  # back (when [L] or [H])
+			self.__ON_UI = False
+			self.reset()
+			self.start_screen()
+
 		elif key in [pygame.K_q, pygame.K_ESCAPE]:
 			self.__ON_UI = False
 			self.__OVERLAY = False
