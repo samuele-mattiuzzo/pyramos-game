@@ -78,10 +78,17 @@ class Game(ControllerMixin):
 
 	def _handle_ui_input(self, ui_screen=None, input=None):
 		if input == pygame.K_SPACE:
-			if ui_screen in ["start", "end_level"]:
-				pass
+			if ui_screen == "start":
+				self._draw_level()
+				self.__ui.toggle()
+				self.__g.toggle()
+			elif ui_screen == "end_level":
+				self._next_level()
+				self.__ui.toggle()
+				self.__g.toggle()
 			elif ui_screen in ["end_game", "defeat"]:
 				self.__ui.cleanup()
+				self.__ui.toggle()
 
 		elif input in [pygame.K_q, pygame.K_ESCAPE]:
 			self.cleanup()
@@ -110,10 +117,10 @@ class Game(ControllerMixin):
 				self.__player, self.__level,
 				self._elapsed_time(start_ticks)
 			)
+			self.update()
 
 			for event in pygame.event.get():
 				self.on_event(event)
-			self.update()
 
 			self.__CLOCK.tick(60)
 		self.cleanup()
@@ -196,6 +203,8 @@ class Game(ControllerMixin):
 			self.__level.name,
 			self.__player.moves
 		)
+		self.__ui.toggle()
+		self.__g.toggle()
 		self.__ui.end_level_screen(self.__player, self.__level)
 
 	def _handle_end_game(self, victory=False):
@@ -204,6 +213,8 @@ class Game(ControllerMixin):
 			self.__level.name,
 			self.__player.moves
 		)
+		self.__ui.toggle()
+		self.__g.toggle()
 		self.__ui.end_game_screen(self.__player, victory)
 
 	def _elapsed_time(self, ticks):
